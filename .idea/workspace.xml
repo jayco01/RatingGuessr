@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/googleMapsClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/googleMapsClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/game/batch/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +87,7 @@
       <updated>1763689541542</updated>
       <workItem from="1763689543003" duration="2540000" />
       <workItem from="1763742585585" duration="201000" />
-      <workItem from="1763853142786" duration="10996000" />
+      <workItem from="1763853142786" duration="12395000" />
     </task>
     <servers />
   </component>
