@@ -1,0 +1,181 @@
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Content-Length: 68
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Content-Length: 68
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T171709.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T170927.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T170903.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T170548.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T170419.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T170338.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T165747.500.json
+
+###
+
+POST http://localhost:3000/api/game/batch
+Content-Type: application/json
+Content-Length: 68
+User-Agent: IntelliJ HTTP Client/WebStorm 2025.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "lat": 51.0447,
+  "lng": -114.0719,
+  "category": "restaurant"
+}
+
+<> 2025-11-23T165010.500.html
+
+###
+

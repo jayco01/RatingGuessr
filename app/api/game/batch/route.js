@@ -1,14 +1,25 @@
-import client from "@/app/lib/googleMapsClient";
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 
-// forces dynamic (no caching) because random results from google api is needed.
-// in other words, I don't want multiple users to get the same locations if they play at the same time.
 export const dynamic = 'force-dynamic';
-const reviewCountLowerEnd = 100;
-const reviewCountHigherEnd = 900;
+
+const MIN_REVIEWS = 100;
+const MAX_REVIEWS = 900;
 
 export async function POST(request) {
-  const {lat, lng, category} = await request.json;
+  console.log("----- API REQUEST STARTED: /api/game/batch -----");
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+  const { lat, lng, category } = body;
+
+  const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+  }
 
   try {
     const fieldMask = [
@@ -20,44 +31,54 @@ export async function POST(request) {
       "places.primaryType"
     ].join(",");
 
-    const requestObj = {
+    const requestBody = {
       locationRestriction: {
         circle: {
           center: { latitude: lat, longitude: lng },
-          radius: 5000.0 // 5k radius
+          radius: 5000.0
         }
       },
       includedPrimaryTypes: [category],
-      maxResultCount: 40 //fetching more than what is needed because most will get filtered out
+      maxResultCount: 20
     };
 
-    // fetch nearby places that meets the criteria stated in the "fieldMask"
-    const [response] = await client.searchNearby(requestObj, {
-      otherArgs: {
-        headers: {
-          "X-Goog-FieldMask": fieldMask,
-          "X-Goog-Api-Key": process.env.GOOGLE_MAPS_SERVER_KEY
-        }
-      }
+    const url = 'https://places.googleapis.com/v1/places:searchNearby';
+
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': apiKey,
+        'X-Goog-FieldMask': fieldMask
+      },
+      body: JSON.stringify(requestBody)
     });
 
-    // filter result
-    // only places with over 100 and less than 900 reviews
-    // not to unknown && not too main stream
-    const potentialPlaces = response.places.filter(place => {
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Google API Error:", errorText);
+      throw new Error(`Google API Error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const rawPlaces = data.places || [];
+
+
+    const potentialPlaces = rawPlaces.filter(place => {
       const reviewCount = place.userRatingCount || 0;
-      return reviewCount >= reviewCountLowerEnd && reviewCount <= reviewCountHigherEnd;
+      return reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
     });
 
     const validBatch = [];
 
     for (const place of potentialPlaces) {
-      const metaUrl = `https://maps.googleapis.com/maps/api/streetview/metadata?location=${place.location.latitude},${place.location.longitude}&source=outdoor&radius=50&key=${process.env.GOOGLE_MAPS_SERVER_KEY}`
+      const metaUrl = `https://maps.googleapis.com/maps/api/streetview/metadata?location=${place.location.latitude},${place.location.longitude}&source=outdoor&radius=50&key=${apiKey}`;
 
       const metaRes = await fetch(metaUrl);
-      const meta = await meta.json();
+      const meta = await metaRes.json();
 
-      if (meta.status !== 200) {
+      if (meta.status === 'OK') {
         validBatch.push({
           placeId: place.id,
           name: place.displayName.text,
@@ -66,16 +87,14 @@ export async function POST(request) {
           location: place.location
         });
       }
-      // stop once there is at least 10 places
-      if (validBatch.length >= 10) {
-        break;
-      }
+
+      if (validBatch.length >= 10) break;
     }
 
     return NextResponse.json(validBatch);
 
   } catch (error) {
-    console.log("Places API Fetch Batch Error",error);
-    return NextResponse.json({ error: error.message }, {status: 500});
+    console.error("Places API Error:", error);
+    return NextResponse.json({ error: error.message || "Unknown error" }, { status: 500 });
   }
 }
