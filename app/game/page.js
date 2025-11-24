@@ -1,6 +1,5 @@
 "use client"
 
-import StreetView from "../components/game/StreetView";
 import {useState, useEffect} from "react";
 
 export default function GamePage() {
@@ -58,18 +57,6 @@ export default function GamePage() {
 
   return (
     <div className="w-screen h-screen">
-      <h1>
-        Location: {firstLocation.name}
-      </h1>
-
-      <div className="w-full h-full">
-      <StreetView lat={firstLocation.location.latitude} lng={firstLocation.location.longitude} />
-      </div>
-
-      <div>
-      <p>{firstLocation.name}</p>
-      <p>Rating: {firstLocation.rating} ({firstLocation.userRatingCount} reviews)</p>
-      </div>
     </div>
   )
 }

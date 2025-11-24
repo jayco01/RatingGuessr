@@ -1,7 +1,6 @@
 "use client"
 
 import {useEffect, useState} from "react";
-import Link from "next/link";
 
 export default function PlacePhoto({photoName, attributions, altText}) {
   const apiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY
