@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Fix: Switch to native fetch for Google Places">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/game/batch/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/lib/googleMapsClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/googleMapsClient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,11 +117,24 @@
       <workItem from="1763689543003" duration="2540000" />
       <workItem from="1763742585585" duration="201000" />
       <workItem from="1763853142786" duration="17687000" />
-      <workItem from="1763945262249" duration="3231000" />
+      <workItem from="1763945262249" duration="4621000" />
     </task>
+    <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
+      <option name="closed" value="true" />
+      <created>1763948597956</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763948597956</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fix: Switch to native fetch for Google Places" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: Switch to native fetch for Google Places" />
   </component>
 </project>
