@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Display panorama in the game page" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView">
+      <change afterPath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -114,7 +124,7 @@
       <workItem from="1763689543003" duration="2540000" />
       <workItem from="1763742585585" duration="201000" />
       <workItem from="1763853142786" duration="17687000" />
-      <workItem from="1763945262249" duration="7955000" />
+      <workItem from="1763945262249" duration="9047000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -140,7 +150,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763951834308</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView">
+      <option name="closed" value="true" />
+      <created>1763954891993</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1763954891993</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +168,7 @@
     <MESSAGE value="Fix: Switch to native fetch for Google Places" />
     <MESSAGE value="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter" />
     <MESSAGE value="Feat: Display panorama in the game page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Display panorama in the game page" />
+    <MESSAGE value="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView" />
   </component>
 </project>
