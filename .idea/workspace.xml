@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Fix: Switch to native fetch for Google Places">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/game/batch/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +117,7 @@
       <workItem from="1763689543003" duration="2540000" />
       <workItem from="1763742585585" duration="201000" />
       <workItem from="1763853142786" duration="17687000" />
-      <workItem from="1763945262249" duration="4621000" />
+      <workItem from="1763945262249" duration="6289000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -127,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763948597956</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter">
+      <option name="closed" value="true" />
+      <created>1763950059577</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763950059577</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -135,6 +143,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fix: Switch to native fetch for Google Places" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: Switch to native fetch for Google Places" />
+    <MESSAGE value="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter" />
   </component>
 </project>
