@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView">
-      <change afterPath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added PlacePhoto.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +66,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\CPRG_306\rating-guessr\app\components\game" />
+      <recent name="C:\CPRG_306\rating-guessr\app\lib" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -124,7 +130,7 @@
       <workItem from="1763689543003" duration="2540000" />
       <workItem from="1763742585585" duration="201000" />
       <workItem from="1763853142786" duration="17687000" />
-      <workItem from="1763945262249" duration="9047000" />
+      <workItem from="1763945262249" duration="9981000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -158,7 +164,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763954891993</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Feat: Added PlacePhoto.js">
+      <option name="closed" value="true" />
+      <created>1763955882050</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763955882050</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,6 +183,7 @@
     <MESSAGE value="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter" />
     <MESSAGE value="Feat: Display panorama in the game page" />
     <MESSAGE value="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView" />
+    <MESSAGE value="Feat: Added PlacePhoto.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added PlacePhoto.js" />
   </component>
 </project>
