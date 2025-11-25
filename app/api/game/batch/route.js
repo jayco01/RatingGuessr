@@ -80,7 +80,7 @@ export async function POST(request) {
         const reviewCount = place.userRatingCount || 0;
 
         const isGoodReviewCount = (reviewCount >= MIN_REVIEWS) && (reviewCount <= MAX_REVIEWS);
-        const hasPhotos = place.photos && place.photos.length > 10; // only get restaurants that has at least 10 photos in google maps
+        const hasPhotos = place.photos && place.photos.length > 0;
         const isDuplicate = validBatch.some(p => p.placeId === place.id);
 
         return !isDuplicate && hasPhotos && isGoodReviewCount;

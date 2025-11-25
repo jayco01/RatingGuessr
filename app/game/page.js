@@ -1,6 +1,7 @@
 "use client"
 
 import {useState, useEffect} from "react";
+import PlacePhoto from "@/app/components/game/PlacePhoto";
 
 export default function GamePage() {
   const [gameQueue, setGameQueue] = useState([]);
@@ -27,6 +28,7 @@ export default function GamePage() {
         }
 
         const data = await response.json();
+        console.log(data);
         setGameQueue(data);
       } catch (error) {
         console.error(error);
@@ -53,7 +55,7 @@ export default function GamePage() {
     )
   }
 
-  const firstLocation = gameQueue[4];
+  const firstLocation = gameQueue[1];
 
   return (
     <div className="w-screen h-screen">
@@ -62,7 +64,7 @@ export default function GamePage() {
       </h1>
 
       <div className="w-full h-full">
-      <StreetView lat={firstLocation.location.latitude} lng={firstLocation.location.longitude} />
+      <PlacePhoto photoName={firstLocation.photoName} attributions={firstLocation.attributions} />
       </div>
 
       <div>
