@@ -72,13 +72,15 @@ export async function POST(request) {
       const data = await response.json();
       const rawPlaces = data.places || [];
 
+      // pagination
+      // if nextPageToken exist, then there is another "page" of locations exist (i.e. a page 2)
       nextPageToken = data.nextPageToken;
 
       const potentialPlaces = rawPlaces.filter(place => {
         const reviewCount = place.userRatingCount || 0;
 
         const isGoodReviewCount = (reviewCount >= MIN_REVIEWS) && (reviewCount <= MAX_REVIEWS);
-        const hasPhotos = place.photos && place.photos.length > 0;
+        const hasPhotos = place.photos && place.photos.length > 10; // only get restaurants that has at least 10 photos in google maps
         const isDuplicate = validBatch.some(p => p.placeId === place.id);
 
         return !isDuplicate && hasPhotos && isGoodReviewCount;
