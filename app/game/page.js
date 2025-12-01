@@ -55,7 +55,7 @@ export default function GamePage() {
     )
   }
 
-  const firstLocation = gameQueue[1];
+  const firstLocation = gameQueue[0];
 
   return (
     <div className="w-screen h-screen">
@@ -63,8 +63,11 @@ export default function GamePage() {
         Location: {firstLocation.name}
       </h1>
 
-      <div className="w-full h-full">
-      <PlacePhoto photoName={firstLocation.photoName} attributions={firstLocation.attributions} />
+      <div className="w-full h-96 relative">
+        <PlacePhoto
+          photos={firstLocation.photos}
+          altText={firstLocation.name}
+        />
       </div>
 
       <div>
