@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 const MIN_REVIEWS = 50;
 const MAX_REVIEWS = 5000;
 const TARGET_BATCH_SIZE = 10;
-const MAX_ATTEMPTS = 10; // limit to prevent infinite loop
+const MAX_ATTEMPTS = 5; // limit to prevent infinite loop
 
 export async function POST(request) {
   console.log("----- API REQUEST STARTED: /api/game/batch -----");
@@ -72,36 +72,31 @@ export async function POST(request) {
       const data = await response.json();
       const rawPlaces = data.places || [];
 
-      // pagination
-      // if nextPageToken exist, then there is another "page" of locations exist (i.e. a page 2)
+
       nextPageToken = data.nextPageToken;
 
-      const potentialPlaces = rawPlaces.filter(place => {
-        const reviewCount = place.userRatingCount || 0;
+      for (const place of rawPlaces) {
+        if (validBatch.length >= TARGET_BATCH_SIZE) break;
 
-        const isGoodReviewCount = (reviewCount >= MIN_REVIEWS) && (reviewCount <= MAX_REVIEWS);
+        const reviewCount = place.userRatingCount || 0;
         const hasPhotos = place.photos && place.photos.length > 0;
         const isDuplicate = validBatch.some(p => p.placeId === place.id);
 
-        return !isDuplicate && hasPhotos && isGoodReviewCount;
-      });
+        if (!isDuplicate && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS) {
 
+          const photoCollection = place.photos.map(p => ({
+            name: p.name,
+            attributions: p.authorAttributions || []
+          }));
 
-      for (const place of potentialPlaces) {
-        if (validBatch.length >= TARGET_BATCH_SIZE) break;
-
-        const photoRef = place.photos[0].name;
-        const attributions = place.photos[0].authorAttributions;
-
-        validBatch.push({
-          placeId: place.id,
-          name: place.displayName.text,
-          rating: place.rating,
-          userRatingCount: place.userRatingCount,
-          location: place.location,
-          photoName: photoRef,
-          attributions: attributions
-        });
+          validBatch.push({
+            placeId: place.id,
+            name: place.displayName.text,
+            rating: place.rating,
+            userRatingCount: place.userRatingCount,
+            photos: photoCollection
+          });
+        }
       }
 
       if (!nextPageToken) break;
