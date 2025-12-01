@@ -40,7 +40,20 @@ export default function GamePage() {
       console.error(error);
       return[];
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    const initGame = async () => {
+      const game = await fetchBatch();
+      if (batch.length >= 2) {
+        setLeftPlace(batch[0]);
+        setRightPlace(batch[1]);
+        setPlaceQueue(batch.slice(2));
+        setGameState("PLAYING");
+      }
+    };
+    initGame();
+  }, [fetchBatch])
 
 
   if(isLoading) {
