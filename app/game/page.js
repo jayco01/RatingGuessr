@@ -55,7 +55,7 @@ export default function GamePage() {
     )
   }
 
-  const firstLocation = gameQueue[0];
+  const firstLocation = gameQueue[2];
 
   return (
     <div className="w-screen h-screen">

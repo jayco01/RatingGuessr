@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Add Functionality to prevent ties from happening">
-      <change afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added Tailwind theme style">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -136,7 +134,7 @@
       <workItem from="1764115503579" duration="20000" />
       <workItem from="1764190698427" duration="50000" />
       <workItem from="1764275103827" duration="1888000" />
-      <workItem from="1764550557370" duration="4267000" />
+      <workItem from="1764550557370" duration="4656000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -210,7 +208,31 @@
       <option name="project" value="LOCAL" />
       <updated>1764558118530</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Feat: Updated to display carosel of photos">
+      <option name="closed" value="true" />
+      <created>1764559224098</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764559224098</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Feat: Updated the props passed to PlacePhoto in the main game component">
+      <option name="closed" value="true" />
+      <created>1764559330518</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764559330518</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Feat: Added Tailwind theme style">
+      <option name="closed" value="true" />
+      <created>1764559407330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764559407330</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,6 +248,9 @@
     <MESSAGE value="Fix: Hydration error" />
     <MESSAGE value="Feat: Extract 10 photos instead of 1" />
     <MESSAGE value="Feat: Add Functionality to prevent ties from happening" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Add Functionality to prevent ties from happening" />
+    <MESSAGE value="Feat: Updated to display carosel of photos" />
+    <MESSAGE value="Feat: Updated the props passed to PlacePhoto in the main game component" />
+    <MESSAGE value="Feat: Added Tailwind theme style" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added Tailwind theme style" />
   </component>
 </project>
