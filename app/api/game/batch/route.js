@@ -7,6 +7,7 @@ const MIN_REVIEWS = 50;
 const MAX_REVIEWS = 5000;
 const TARGET_BATCH_SIZE = 10;
 const MAX_ATTEMPTS = 5; // limit to prevent infinite loop
+const TARGET_PHOTO_COLLECTION_SIZE = 10;
 
 export async function POST(request) {
   console.log("----- API REQUEST STARTED: /api/game/batch -----");
@@ -38,6 +39,8 @@ export async function POST(request) {
     let validBatch = [];
     let nextPageToken = null;
     let attempts = 0;
+
+    let lastRating = null;
 
     do {
       attempts++;
@@ -71,32 +74,37 @@ export async function POST(request) {
 
       const data = await response.json();
       const rawPlaces = data.places || [];
-
-
       nextPageToken = data.nextPageToken;
 
-      for (const place of rawPlaces) {
-        if (validBatch.length >= TARGET_BATCH_SIZE) break;
-
+      const potentialPlaces = rawPlaces.filter(place => {
         const reviewCount = place.userRatingCount || 0;
         const hasPhotos = place.photos && place.photos.length > 0;
         const isDuplicate = validBatch.some(p => p.placeId === place.id);
 
-        if (!isDuplicate && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS) {
+        // Adjacent No-Tie Check
+        // If we have a previous place, the new place cannot have the same rating
+        const isTie = lastRating !== null && Math.abs(place.rating - lastRating) < 0.1;
 
-          const photoCollection = place.photos.map(p => ({
-            name: p.name,
-            attributions: p.authorAttributions || []
-          }));
+        return !isDuplicate && !isTie && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
+      });
 
-          validBatch.push({
-            placeId: place.id,
-            name: place.displayName.text,
-            rating: place.rating,
-            userRatingCount: place.userRatingCount,
-            photos: photoCollection
-          });
-        }
+      for (const place of potentialPlaces) {
+        if (validBatch.length >= TARGET_BATCH_SIZE) break;
+
+        const photoCollection = place.photos.slice(0, TARGET_PHOTO_COLLECTION_SIZE).map(photo => ({
+          name: photo.name,
+          attributions: photo.authorAttributions
+        }));
+
+        validBatch.push({
+          placeId: place.id,
+          name: place.displayName.text,
+          rating: place.rating,
+          userRatingCount: place.userRatingCount,
+          photos: photoCollection
+        });
+
+        lastRating = place.rating;
       }
 
       if (!nextPageToken) break;
