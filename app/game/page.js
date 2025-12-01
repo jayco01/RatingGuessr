@@ -2,10 +2,10 @@
 
 import {useState, useEffect, useCallback} from "react";
 import PlacePhoto from "@/app/components/game/PlacePhoto";
-import {FaArrowUp, FaArrowDown, FaStar, FaRedo} from "react-icons/fa";
+import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight} from "react-icons/fa";
 
 export default function GamePage() {
-  // (LOADING -> PLAYING -> GAMEOVER)
+  // STATES: LOADING -> PLAYING -> ROUND_WIN -> GAMEOVER
   const [gameState, setGameState] = useState("LOADING");
   const [score, setScore] = useState(0);
 
@@ -17,8 +17,8 @@ export default function GamePage() {
   const [placeQueue, setPlaceQueue] = useState([]);
 
   const TEST_CITY = {
-    lat: 51.0447,
-    lng: -114.0719,
+    lat: 40.7128,
+    lng: -74.0060,
     category: "restaurant"
   };
 
@@ -44,7 +44,7 @@ export default function GamePage() {
 
   useEffect(() => {
     const initGame = async () => {
-      const game = await fetchBatch();
+      const batch = await fetchBatch();
       if (batch.length >= 2) {
         setLeftPlace(batch[0]);
         setRightPlace(batch[1]);
@@ -56,39 +56,44 @@ export default function GamePage() {
   }, [fetchBatch])
 
 
-  if(isLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleGuess = (guess) => {
+    if (gameState !== "PLAYING") return;
 
-  if(error){
-    return <div>Something went wrong...</div>;
-  }
+    const leftRating = leftPlace.rating;
+    const rightRating = rightPlace.rating;
 
-  if(gameQueue.length == 0){
+    const isCorrect =
+      (guess === "higher" && rightRating >= leftRating) ||
+      (guess === "lower" && rightRating <= leftRating);
+
+    if(isCorrect) {
+      setScore((prev) => prev + 1);
+      setGameState("ROUND_WIN");
+    } else {
+      setGameState("GAMEOVER");
+    }
+  };
+
+
+
+
+  if(gameState === "LOADING") {
     return (
-      <div>No Places Found.</div>
-    )
+      <div className="flex h-screen w-screen items-center justify-center bg-evergreen text-lime_cream">
+        <div className="text-2xl font-bold">Finding Locations...</div>
+      </div>
+    );
   }
-
-  const firstLocation = gameQueue[2];
 
   return (
-    <div className="w-screen h-screen">
-      <h1>
-        Location: {firstLocation.name}
-      </h1>
-
-      <div className="w-full h-96 relative">
-        <PlacePhoto
-          photos={firstLocation.photos}
-          altText={firstLocation.name}
-        />
+    <div className="flex flex-row ">
+      <div className="flex-1">
+        <PlacePhoto photos={leftPlace.photos} altText={leftPlace.name}></PlacePhoto>
+      </div>
+      <div className="flex-1">
+        <PlacePhoto photos={rightPlace.photos} altText={rightPlace.name}></PlacePhoto>
       </div>
 
-      <div>
-      <p>{firstLocation.name}</p>
-      <p>Rating: {firstLocation.rating} ({firstLocation.userRatingCount} reviews)</p>
-      </div>
     </div>
-  )
+  );
 }
