@@ -1,12 +1,20 @@
 "use client"
 
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import PlacePhoto from "@/app/components/game/PlacePhoto";
+import {FaArrowUp, FaArrowDown, FaStar, FaRedo} from "react-icons/fa";
 
 export default function GamePage() {
-  const [gameQueue, setGameQueue] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // (LOADING -> PLAYING -> GAMEOVER)
+  const [gameState, setGameState] = useState("LOADING");
+  const [score, setScore] = useState(0);
+
+  // The two cards currently on the "Board"
+  const [leftPlace, setLeftPlace] = useState(null);
+  const [rightPlace, setRightPlace] = useState(null);
+
+  // The Queue (Buffer)
+  const [placeQueue, setPlaceQueue] = useState([]);
 
   const TEST_CITY = {
     lat: 51.0447,
@@ -14,32 +22,26 @@ export default function GamePage() {
     category: "restaurant"
   };
 
-  useEffect(() => {
-    async function fetchGameBatch() {
-      try {
-        const response = await fetch("/api/game/batch", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(TEST_CITY),
-        });
+  const fetchBatch = useCallback(async () => {
+    try {
+      const response = await fetch("/api/game/batch", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(TEST_CITY),
+      });
 
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-
-        const data = await response.json();
-        console.log(data);
-        setGameQueue(data);
-      } catch (error) {
-        console.error(error);
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Game Batch: ${response.statusText}`);
       }
-    }
 
-    fetchGameBatch();
-  }, []);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      return[];
+    }
+  });
+
 
   if(isLoading) {
     return <div>Loading...</div>;
