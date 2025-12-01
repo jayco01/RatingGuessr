@@ -74,8 +74,31 @@ export default function GamePage() {
     }
   };
 
+  const handleNextRound = async () => {
+    setLeftPlace(rightPlace);
 
+    if(placeQueue.length > 0) {
+      const next = placeQueue[0];
+      setRightPlace(next);
+      setPlaceQueue(prev => prev.slice(1)); // Shift queue
 
+      // Background fetch to keep queue full
+      if(placeQueue.length < 3) {
+        const newBatch = await fetchBatch();
+        setPlaceQueue(prev => [...prev, ...newBatch]);
+      }
+
+      setGameState("PLAYING");
+    } else {
+      setGameState("LOADING");
+    }
+  };
+
+  const resetGame = () => {
+    setScore(0);
+    setGameState("LOADING");
+    window.location.reload();
+  };
 
   if(gameState === "LOADING") {
     return (
