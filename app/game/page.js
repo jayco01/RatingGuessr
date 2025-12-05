@@ -85,7 +85,24 @@ export default function GamePage() {
       // Background fetch to keep queue full
       if(placeQueue.length < 3) {
         const newBatch = await fetchBatch();
-        setPlaceQueue(prev => [...prev, ...newBatch]);
+
+        setPlaceQueue(prevQueue => {
+          // If queue is empty, just take the new batch
+          if (prevQueue.length === 0) return newBatch;
+
+          const lastItem = prevQueue[prevQueue.length - 1]; //last item in the current queue
+          const firstNew = newBatch[0]; //First item of new data
+
+          // Tie-Breaker Check
+          if (lastItem && firstNew && lastItem.rating === firstNew.rating) {
+            console.log("Batch boundary tie detected! Dropping duplicate rating to preserve game flow.");
+            // Return existing queue + new batch (minus the first item)
+            return [...prevQueue, ...newBatch.slice(1)];
+          }
+
+          // merge after checking the tie
+          return [...prevQueue, ...newBatch];
+        });
       }
 
       setGameState("PLAYING");
