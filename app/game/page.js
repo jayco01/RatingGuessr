@@ -4,17 +4,34 @@ import {useState, useEffect, useCallback} from "react";
 import PlacePhoto from "@/app/components/game/PlacePhoto";
 import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight} from "react-icons/fa";
 
+// Read from LocalStorage to avoids "window is undefined" error
+const loadState = (key, fallback) => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback; // JSON.parse handles both numbers (score) and objects (queue)
+  }
+  return fallback;
+};
+
 export default function GamePage() {
   // STATES: LOADING -> PLAYING -> ROUND_WIN -> GAMEOVER
   const [gameState, setGameState] = useState("LOADING");
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(() => loadState("rg_score", 0));
 
   // The two cards currently on the "Board"
-  const [leftPlace, setLeftPlace] = useState(null);
-  const [rightPlace, setRightPlace] = useState(null);
+  const [leftPlace, setLeftPlace] = useState(() => loadState("rg_left", null));
+  const [rightPlace, setRightPlace] = useState(() => loadState("rg_right", null));
 
   // The Queue (Buffer)
-  const [placeQueue, setPlaceQueue] = useState([]);
+  const [placeQueue, setPlaceQueue] = useState(() => loadState("rg_queue", []));
+
+  // Save states to local storage whenever one of them updates
+  useEffect(() => {
+    localStorage.setItem("rg_score", JSON.stringify(score));
+    localStorage.setItem("rg_left", JSON.stringify(leftPlace));
+    localStorage.setItem("rg_right", JSON.stringify(rightPlace));
+    localStorage.setItem("rg_queue", JSON.stringify(placeQueue));
+  }, [score, leftPlace, rightPlace, placeQueue]);
 
   const TEST_CITY = {
     lat: 40.7128,
@@ -44,6 +61,12 @@ export default function GamePage() {
 
   useEffect(() => {
     const initGame = async () => {
+      // If a game was restored from local storage, resume it instead of fetching new
+      if (leftPlace && rightPlace) {
+        setGameState("PLAYING");
+        return;
+      }
+
       const batch = await fetchBatch();
       if (batch.length >= 2) {
         setLeftPlace(batch[0]);
@@ -112,8 +135,11 @@ export default function GamePage() {
   };
 
   const resetGame = () => {
-    setScore(0);
-    setGameState("LOADING");
+    localStorage.removeItem("rg_score");
+    localStorage.removeItem("rg_left");
+    localStorage.removeItem("rg_right");
+    localStorage.removeItem("rg_queue");
+
     window.location.reload();
   };
 
