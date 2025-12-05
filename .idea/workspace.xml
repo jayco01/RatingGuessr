@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Fix: Add a condition to only load firebase analytics when opened in a browser">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented game page UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/game/PlacePhoto.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -137,7 +136,7 @@
       <workItem from="1764275103827" duration="1888000" />
       <workItem from="1764550557370" duration="4656000" />
       <workItem from="1764606299177" duration="6534000" />
-      <workItem from="1764902061062" duration="4593000" />
+      <workItem from="1764902061062" duration="5604000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -323,7 +322,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764906742856</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Feat: Implemented game page UI">
+      <option name="closed" value="true" />
+      <created>1764907752488</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1764907752488</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -352,6 +359,7 @@
     <MESSAGE value="Fix: Added client side logic to prevent ties when adding a new batch" />
     <MESSAGE value="Feat: Added functionality to save current game to local storage" />
     <MESSAGE value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
+    <MESSAGE value="Feat: Implemented game page UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented game page UI" />
   </component>
 </project>
