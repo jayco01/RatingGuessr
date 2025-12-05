@@ -62,21 +62,21 @@ export default function PlacePhoto({photos, altText}) {
         <>
           <button
             onClick={previousSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 p-4 rounded-full text-white opacity-0 group-hover:opacity-100 transition hover:bg-black/50 pointer-events-auto"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 p-4 rounded-full text-white group-hover:opacity-100 transition hover:bg-black/50 pointer-events-auto"
           >
-            <FaChevronLeft />
+            <FaChevronLeft size="2rem" />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 p-4 rounded-full text-white opacity-0 group-hover:opacity-100 transition hover:bg-black/50 pointer-events-auto"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/30 p-4 rounded-full text-white group-hover:opacity-100 transition hover:bg-black/50 pointer-events-auto"
           >
-            <FaChevronRight />
+            <FaChevronRight size="2rem" />
           </button>
 
           {/* Dots Indicator */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
             {photos.map((_, idx) => (
-              <div key={idx} className={`w-1.5 h-1.5 rounded-full ${idx === currentIndex ? 'bg-white' : 'bg-white/50'}`} />
+              <div key={idx} className={`w-2 h-2 rounded-full ${idx === currentIndex ? 'bg-white' : 'bg-white/50'}`} />
             ))}
           </div>
         </>

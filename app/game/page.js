@@ -152,12 +152,86 @@ export default function GamePage() {
   }
 
   return (
-    <div className="flex flex-row ">
-      <div className="flex-1">
-        <PlacePhoto photos={leftPlace.photos} altText={leftPlace.name}></PlacePhoto>
+    <div className="flex h-screen w-screen bg-black overflow-hidden relative">
+
+      {/* --- LEFT CARD --- */}
+      <div className="relative w-1/2 h-full border-r-4 border-white">
+        <PlacePhoto photos={leftPlace.photos} altText={leftPlace.name} />
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-4">
+          <h2 className="text-3xl font-bold text-white mb-2">{leftPlace.name}</h2>
+          <div className="text-5xl font-extrabold text-lime_cream">
+            {leftPlace.rating.toFixed(1)}
+          </div>
+          <div className="text-sm text-gray-300 mt-2">Google Rating</div>
+        </div>
       </div>
-      <div className="flex-1">
-        <PlacePhoto photos={rightPlace.photos} altText={rightPlace.name}></PlacePhoto>
+
+      {/* --- RIGHT CARD --- */}
+      <div className="relative w-1/2 h-full">
+        <PlacePhoto photos={rightPlace.photos} altText={rightPlace.name} />
+
+        {/* Overlay: Playing State */}
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-4">
+          <h2 className="text-3xl font-bold text-white mb-6">{rightPlace.name}</h2>
+
+          {gameState === "PLAYING" ? (
+            <div className="flex flex-col gap-4">
+              <div className="text-xl text-white">has a rating...</div>
+
+              <button
+                onClick={() => handleGuess("higher")}
+                className="flex items-center gap-2 bg-hunter_green hover:bg-evergreen text-white px-8 py-3 rounded-full text-xl font-bold transition transform hover:scale-105"
+              >
+                <FaArrowUp /> Higher
+              </button>
+
+              <button
+                onClick={() => handleGuess("lower")}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-8 py-3 rounded-full text-xl font-bold transition transform hover:scale-105"
+              >
+                <FaArrowDown /> Lower
+              </button>
+
+              <div className="text-xl text-white">than {leftPlace.name}?</div>
+            </div>
+          ) : (
+            /* Overlay: Result State (Win/Loss) */
+            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300">
+              <div className="text-6xl font-extrabold text-lime_cream mb-2">
+                {rightPlace.rating.toFixed(1)}
+              </div>
+
+              {gameState === "ROUND_WIN" && (
+                <div className="mb-6">
+                  <div className="text-2xl text-green-400 font-bold mb-4">Correct!</div>
+                  <button
+                    onClick={handleNextRound}
+                    className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200"
+                  >
+                    Next Round <FaArrowRight />
+                  </button>
+                </div>
+              )}
+
+              {gameState === "GAMEOVER" && (
+                <div className="mb-6">
+                  <div className="text-2xl text-red-500 font-bold mb-4">Game Over!</div>
+                  <button
+                    onClick={resetGame}
+                    className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200"
+                  >
+                    Play Again <FaRedo />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* --- SCOREBOARD --- */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20 text-white font-mono text-xl z-50">
+        Score: {score}
       </div>
 
     </div>
