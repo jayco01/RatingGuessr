@@ -9,6 +9,13 @@ import { app } from "@/app/lib/firebase";
 import { useAuth } from "@/app/hooks/useAuth";
 import LoginModal from "@/app/components/LoginModal";
 
+// Sub-Components
+import LobbyView from "@/app/components/game/LobbyView";
+import GameHeader from "@/app/components/game/GameHeader";
+import ScoreBoard from "@/app/components/game/ScoreBoard";
+import LeftCard from "@/app/components/game/LeftCard";
+import RightCard from "@/app/components/game/RightCard";
+
 // Read from LocalStorage to avoids "window is undefined" error
 const loadState = (key, fallback) => {
   if (typeof window !== "undefined") {
@@ -243,130 +250,6 @@ export default function GamePage() {
           onNext={handleNextRound}
           onReset={resetGame}
         />
-      </div>
-    </div>
-  );
-}
-
-// ==============================================================
-// SUB-COMPONENTS (will eventually be separated into other files)
-// ==============================================================
-
-function LobbyView({ onCitySelect }) {
-  return (
-    <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen-200 gap-8 p-4">
-      <h1 className="text-4xl md:text-6xl font-bold text-lime_cream text-center">Rating Guessr</h1>
-      <p className="text-white text-xl">Pick a city to start exploring.</p>
-      <CityPicker onCitySelect={onCitySelect} />
-      <div className="flex gap-4 text-sm text-gray-400">
-        <span>Try: </span>
-        <button onClick={() => onCitySelect({lat: 40.7128, lng: -74.0060, name: "New York"})} className="hover:text-white underline">New York</button>
-        <button onClick={() => onCitySelect({lat: 35.6762, lng: 139.6503, name: "Tokyo"})} className="hover:text-white underline">Tokyo</button>
-      </div>
-    </div>
-  );
-}
-
-function GameHeader({ currentCity, user, onClearCity, onLogout, onLogin }) {
-  return (
-    <>
-      <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
-        <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm border border-white/10 shadow-sm">
-          📍 {currentCity?.name}
-        </div>
-        <button onClick={onClearCity} className="bg-white/20 hover:bg-red-600 hover:text-white text-white/80 text-xs px-3 py-1.5 rounded-full backdrop-blur-sm transition border border-white/10">
-          Change City
-        </button>
-      </div>
-
-      <div className="absolute top-4 right-4 z-50">
-        {user ? (
-          <button onClick={onLogout} className="flex items-center gap-2 bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm hover:bg-red-900/80 transition text-sm border border-white/10">
-            <div className="w-6 h-6 rounded-full bg-hunter_green flex items-center justify-center text-xs overflow-hidden">
-              {user.photoURL ? <img src={user.photoURL} alt="User" /> : user.email?.[0]?.toUpperCase()}
-            </div>
-            <span className="hidden md:inline">Sign Out</span>
-            <FaSignOutAlt />
-          </button>
-        ) : (
-          <button onClick={onLogin} className="bg-white text-black px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition text-sm shadow-xl">
-            Login
-          </button>
-        )}
-      </div>
-    </>
-  );
-}
-
-function ScoreBoard({ score }) {
-  return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/20 text-white font-mono text-xl z-50">
-      Score: {score}
-    </div>
-  );
-}
-
-function LeftCard({ place, onFavorite }) {
-  return (
-    <div className="relative w-1/2 h-full border-r-4 border-white">
-      <button
-        onClick={onFavorite}
-        className="absolute top-4 right-4 z-40 p-3 bg-black/30 backdrop-blur-md rounded-full text-white hover:bg-red-500 hover:text-white transition group border border-white/20"
-        title="Save to Favorites"
-      >
-        <FaHeart className="text-2xl text-white/80 group-hover:text-white" />
-      </button>
-
-      <PlacePhoto photos={place?.photos} altText={place?.name} />
-
-      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-4 pointer-events-none">
-        <h2 className="text-3xl font-bold text-white mb-2">{place?.name}</h2>
-        <p className="text-5xl font-extrabold text-lime_cream">{place?.rating.toFixed(1)}</p>
-        <p className="text-sm text-gray-300 mt-2">Google Rating</p>
-      </div>
-    </div>
-  );
-}
-
-function RightCard({ place, gameState, onGuess, onNext, onReset }) {
-  return (
-    <div className="relative w-1/2 h-full">
-      <PlacePhoto photos={place?.photos} altText={place?.name} />
-      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-4">
-        <h2 className="text-3xl font-bold text-white mb-6">{place?.name}</h2>
-
-        {gameState === "PLAYING" ? (
-          <div className="flex flex-col gap-4 items-center">
-            <p className="text-xl text-white">has a rating...</p>
-            <button onClick={() => onGuess("higher")} className="flex items-center gap-2 bg-hunter_green hover:bg-evergreen text-white px-8 py-3 rounded-full text-xl font-bold transition transform hover:scale-105">
-              <FaArrowUp/> Higher
-            </button>
-            <button onClick={() => onGuess("lower")} className="flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-8 py-3 rounded-full text-xl font-bold transition transform hover:scale-105">
-              <FaArrowDown/> Lower
-            </button>
-            <p className="text-xl text-white">than the other place?</p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300">
-            <p className="text-6xl font-extrabold text-lime_cream mb-2">{place?.rating.toFixed(1)}</p>
-            {gameState === "ROUND_WIN" && (
-              <div className="mb-6">
-                <p className="text-2xl text-green-400 font-bold mb-4">Correct!</p>
-                <button onClick={onNext} className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200">
-                  Next Round <FaArrowRight/>
-                </button>
-              </div>
-            )}
-            {gameState === "GAMEOVER" && (
-              <div className="mb-6">
-                <p className="text-2xl text-red-500 font-bold mb-4">Game Over!</p>
-                <button onClick={onReset} className="flex items-center gap-2 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200">
-                  Play Again <FaRedo/>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added Auth logic in game">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented login/logout function and refactored UI into smaller suc-components">
+      <change afterPath="$PROJECT_DIR$/app/components/game/GameHeader.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/components/game/LeftCard.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/components/game/LobbyView.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/components/game/RightCard.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/components/game/ScoreBoard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
@@ -139,7 +144,8 @@
       <workItem from="1764902061062" duration="6003000" />
       <workItem from="1764949296065" duration="198000" />
       <workItem from="1764966045552" duration="44000" />
-      <workItem from="1765070481730" duration="10481000" />
+      <workItem from="1765070481730" duration="10661000" />
+      <workItem from="1765133498194" duration="298000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -421,14 +427,21 @@
       <option name="project" value="LOCAL" />
       <updated>1765080239489</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Feat: Implemented login/logout function and refactored UI into smaller suc-components">
+      <option name="closed" value="true" />
+      <created>1765081110262</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1765081110262</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Updated to display carosel of photos" />
     <MESSAGE value="Feat: Updated the props passed to PlacePhoto in the main game component" />
     <MESSAGE value="Feat: Added Tailwind theme style" />
     <MESSAGE value="Refactor: Deleted the default homepage" />
@@ -453,6 +466,7 @@
     <MESSAGE value="Feat: Implement Login UI" />
     <MESSAGE value="Feat: Added useAuth hook" />
     <MESSAGE value="Feat: Added Auth logic in game" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added Auth logic in game" />
+    <MESSAGE value="Feat: Implemented login/logout function and refactored UI into smaller suc-components" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented login/logout function and refactored UI into smaller suc-components" />
   </component>
 </project>
