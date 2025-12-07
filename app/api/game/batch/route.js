@@ -7,7 +7,7 @@ const MIN_REVIEWS = 50;
 const MAX_REVIEWS = 5000;
 const TARGET_BATCH_SIZE = 5;
 const FETCH_POOL_SIZE = 40;
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = 10;
 const SEARCH_RADIUS = 2000.0;
 
 // Shuffle Algorithm to randomize the order of batch
@@ -27,7 +27,7 @@ function getJitteredCoordinates(lat, lng, maxRadiusKm = 20) {
   // sqrt(random()) for distributing evenly in the circle, otherwise points would clump in the center.
   const r = maxRadiusKm * Math.sqrt(Math.random());
 
-  // 2. Pick a random angle (0 to 2*PI radians)
+  // Pick a random angle (0 to 2*PI radians)
   const theta = Math.random() * 2 * Math.PI;
 
   // Convert Polar (distance/angle) to Cartesian offsets (km)
@@ -42,7 +42,7 @@ function getJitteredCoordinates(lat, lng, maxRadiusKm = 20) {
 
   console.log(`Jitter Jump: ${r.toFixed(2)}km away at angle ${(theta * 180 / Math.PI).toFixed(0)}°`);
 
-  return { lat: newLat, lng: newLng };
+  return { lat: newLat, lng: newLng, dist: r };
 }
 
 export async function POST(request) {
@@ -55,16 +55,12 @@ export async function POST(request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  let { lat, lng, category, seenIds = [] } = body;
-  lat = Number(lat);
-  lng = Number(lng);
+  let { lat: anchorLat, lng: anchorLng, category, seenIds = [] } = body;
+  anchorLat = Number(anchorLat);
+  anchorLng = Number(anchorLng);
 
-  console.log("Input Coordinates:", { lat, lng });
+  console.log("Input Coordinates:", { anchorLat, anchorLng });
   console.log("Seen IDs Count:", seenIds.length);
-
-  const jittered = getJitteredCoordinates(lat, lng, 20);
-  lat = jittered.lat;
-  lng = jittered.lng;
 
   const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
   if (!apiKey) {
@@ -86,15 +82,28 @@ export async function POST(request) {
     let nextPageToken = null;
     let attempts = 0;
 
+    // Track current search center
+    let searchLat = anchorLat;
+    let searchLng = anchorLng;
+    let isNewLocation = true;
+
     // fetch until there is enough candidates to shuffle, or we run out of pages
     do {
-      console.log(`Fetching Page ${attempts + 1}...`);
       attempts++;
+
+      //If new location is needed (Start or Dead End), Jitter from the Anchor
+      if (isNewLocation) {
+        const jitter = getJitteredCoordinates(anchorLat, anchorLng, 20);
+        searchLat = jitter.lat;
+        searchLng = jitter.lng;
+        isNewLocation = false;
+        console.log(`Jittering to new spot: ${jitter.dist.toFixed(2)}km away (Attempt ${attempts})`);
+      }
 
       const requestBody = {
         locationRestriction: {
           circle: {
-            center: { latitude: lat, longitude: lng },
+            center: { latitude: searchLat, longitude: searchLng },
             radius: SEARCH_RADIUS
           }
         },
@@ -102,6 +111,8 @@ export async function POST(request) {
         maxResultCount: 20,
         ...(nextPageToken && { pageToken: nextPageToken })
       };
+
+      console.log(`Fetching Page ${attempts + 1}...`);
 
       const response = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
         method: 'POST',
@@ -114,8 +125,10 @@ export async function POST(request) {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Google API Error: ${response.status} ${response.statusText} ${errorText}`);
+        console.error(`Google Error: ${response.status}`);
+        isNewLocation = true;
+        nextPageToken = null;
+        continue;
       }
 
       const data = await response.json();
@@ -157,8 +170,17 @@ export async function POST(request) {
         });
       }
 
-      // Stop if no next page is available
-      if (!nextPageToken) break;
+      // CRITICAL: Decide next step
+      if (data.nextPageToken) {
+        // If this location has more pages, stay here!
+        nextPageToken = data.nextPageToken;
+        isNewLocation = false;
+      } else {
+        // If this location is dry, force a JUMP to a new spot next loop!
+        console.log("🚫 Location exhausted. Preparing to jump...");
+        nextPageToken = null;
+        isNewLocation = true;
+      }
 
       // Continue fetching until we have a enough in the pool (40 items) or hit max attempts
     } while (candidates.length < FETCH_POOL_SIZE && attempts < MAX_ATTEMPTS);

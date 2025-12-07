@@ -24,6 +24,7 @@ const loadState = (key, fallback) => {
 
 export default function GamePage() {
   const BUFFER_UNDERRUN_SIZE = 2;
+  const FETCH_TIMEOUT_MS = 5000; // how long should fetch batch take before allowing duplicate places to be added in queue
   const [isMounted, setIsMounted] = useState(false);
   const [currentCity, setCurrentCity] = useState(() => loadState("rg_city", null));
 
@@ -42,7 +43,27 @@ export default function GamePage() {
   // The Queue (Buffer)
   const [placeQueue, setPlaceQueue] = useState(() => loadState("rg_queue", []));
 
-  const [seenIds, setSeenIds] = useState(() => loadState("rg_seen", []));
+  const [seenIds, setSeenIds] = useState(() => {
+    if (typeof window !== "undefined") {
+      const lastPlayedStr = localStorage.getItem("rg_last_played");
+
+      const DAY_PASSED = 1;
+      const CALCULATED_RESET_TIME = DAY_PASSED * 24 * 60 * 60 * 1000;
+
+      const now = Date.now();
+
+      if (lastPlayedStr) {
+        const lastPlayed = parseInt(lastPlayedStr);
+        // Check if more than 1 day has passed
+        if (now - lastPlayed > CALCULATED_RESET_TIME) {
+          console.log("It's been over "+ DAY_PASSED +" day(s). Resetting seen history.");
+          return [];
+        }
+      }
+      return loadState("rg_seen", []);
+    }
+    return [];
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -56,10 +77,12 @@ export default function GamePage() {
     localStorage.setItem("rg_queue", JSON.stringify(placeQueue));
     localStorage.setItem("rg_city", JSON.stringify(currentCity));
     localStorage.setItem("rg_seen", JSON.stringify(seenIds));
-  }, [score, leftPlace, rightPlace, placeQueue, currentCity]); // Add dependency
+    localStorage.setItem("rg_last_played", Date.now().toString());
+  }, [score, leftPlace, rightPlace, placeQueue, currentCity, seenIds]); // Add dependency
 
-  const fetchBatch = useCallback(async (cityOverride) => {
+  const fetchBatch = useCallback(async (cityOverride, customSeenIds = null) => {
     const targetCity = cityOverride || currentCity;
+    const idsToUse = customSeenIds || seenIds;
 
     console.log("🚀 CLIENT: Starting Fetch Request...", targetCity);
 
@@ -73,7 +96,7 @@ export default function GamePage() {
           lat: targetCity.lat,
           lng: targetCity.lng,
           category: "restaurant",
-          seenIds: seenIds
+          seenIds: idsToUse
         }),
       });
 
@@ -114,20 +137,42 @@ export default function GamePage() {
     localStorage.removeItem("rg_queue");
     localStorage.removeItem("rg_seen");
 
-    //fetch new batch for the new city
-    const batch = await fetchBatch(cityData);
+    let batch = [];
+
+    try {
+      // Define the Promise when it time out
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT")), FETCH_TIMEOUT_MS)
+      );
+
+      batch = await Promise.race([
+        fetchBatch(cityData),
+        timeoutPromise
+      ]);
+
+    } catch (err) {
+      if (err.message === "TIMEOUT") {
+        console.warn(`Fetch timed out (>${FETCH_TIMEOUT_MS}s). Clearing history to allow repeats.`);
+
+        // Clear History and retry if fetching takes over the FETCH_TIMEOUT_MS window
+        localStorage.removeItem("rg_seen");
+        setSeenIds([]);
+
+        batch = await fetchBatch(cityData, []);
+      } else {
+        console.error("Fetch failed:", err);
+      }
+    }
 
     console.log("Batch received from server:", batch);
 
-    if (batch.length >= 2) {
+    if (batch && batch.length >= 2) {
       setLeftPlace(batch[0]);
       setRightPlace(batch[1]);
       setPlaceQueue(batch.slice(2));
       setGameState("PLAYING");
-    }else {
-      // Handle empty batch
+    } else {
       console.error("Not enough places found!");
-      alert("Could not find enough places in this city. Please try another.");
       setGameState("LOBBY");
       setCurrentCity(null);
     }
