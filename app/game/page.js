@@ -188,7 +188,7 @@ export default function GamePage() {
 
   if (!currentCity) {
     return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen gap-8 p-4">
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen-200 gap-8 p-4">
         <h1 className="text-4xl md:text-6xl font-bold text-lime_cream text-center">
           Rating Guessr
         </h1>
@@ -259,27 +259,6 @@ export default function GamePage() {
         Play Again <FaRedo/>
       </button>
     </div>;
-  }
-
-  if (!currentCity && gameState !== "PLAYING") {
-    return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen gap-8 p-4">
-        <h1 className="text-4xl md:text-6xl font-bold text-lime_cream text-center">
-          Rating Guessr
-        </h1>
-        <p className="text-white text-xl">Pick a city to start exploring.</p>
-
-        {/* The Child Component */}
-        <CityPicker onCitySelect={handleCitySelect} />
-
-        {/* For Testing */}
-        <div className="flex gap-4 text-sm text-gray-400">
-          <span>Try: </span>
-          <button onClick={() => handleCitySelect({lat: 40.7128, lng: -74.0060, name: "New York"})} className="hover:text-white underline">New York</button>
-          <button onClick={() => handleCitySelect({lat: 35.6762, lng: 139.6503, name: "Tokyo"})} className="hover:text-white underline">Tokyo</button>
-        </div>
-      </div>
-    );
   }
 
   return (
