@@ -107,7 +107,7 @@ export default function CityPicker({ onCitySelect }) {
         value={query}
         onChange={handleInputChange}
         placeholder="Search for a city (e.g. Tokyo)..."
-        className="w-full px-4 py-3 rounded-full text-black shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="w-full px-4 py-3 rounded-full text-evergreen-200 font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-evergreen-700 bg-lime-50"
       />
 
       {isOpen && predictions.length > 0 && (

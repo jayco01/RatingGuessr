@@ -285,8 +285,20 @@ export default function GamePage() {
   return (
     <div className="flex h-screen w-screen bg-black overflow-hidden relative">
 
-      <div className="absolute top-4 left-4 z-50 bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
-        📍 {currentCity?.name}
+      {/* City Indicator & Change Button --- */}
+      <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
+        {/* City Name Badge */}
+        <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm border border-white/10 shadow-sm">
+          📍 {currentCity?.name}
+        </div>
+
+        {/* The "Change" Button */}
+        <button
+          onClick={clearCity}
+          className="bg-white/20 hover:bg-red-600 hover:text-white text-white/80 text-xs px-3 py-1.5 rounded-full backdrop-blur-sm transition border border-white/10"
+        >
+          Change City
+        </button>
       </div>
 
       {/* --- LEFT CARD --- */}
