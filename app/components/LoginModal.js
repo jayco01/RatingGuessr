@@ -25,6 +25,28 @@ export default function LoginModal({isOpen, onClose}) {
     }
   };
 
+  const handleEmailAuth = async event => {
+    event.preventDefault();
+    setError("");
 
+    try {
+      if (isSignUp) {
+        // Create a new account
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        // login to an existing account
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+      onClose();// close login model once done logging in
+    } catch (error) {
+      setError(error.message.replace("Firebase: ", ""));
+    }
+  };
+
+  return (
+    <div>
+
+    </div>
+  )
 
 }
