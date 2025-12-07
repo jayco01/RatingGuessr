@@ -44,6 +44,8 @@ export default function GamePage() {
   // The Queue (Buffer)
   const [placeQueue, setPlaceQueue] = useState(() => loadState("rg_queue", []));
 
+  const [seenIds, setSeenIds] = useState(() => loadState("rg_seen", []));
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -55,6 +57,7 @@ export default function GamePage() {
     localStorage.setItem("rg_right", JSON.stringify(rightPlace));
     localStorage.setItem("rg_queue", JSON.stringify(placeQueue));
     localStorage.setItem("rg_city", JSON.stringify(currentCity));
+    localStorage.setItem("rg_seen", JSON.stringify(seenIds));
   }, [score, leftPlace, rightPlace, placeQueue, currentCity]); // Add dependency
 
   const fetchBatch = useCallback(async (cityOverride) => {
@@ -69,15 +72,24 @@ export default function GamePage() {
         body: JSON.stringify({
           lat: targetCity.lat,
           lng: targetCity.lng,
-          category: "restaurant"
+          category: "restaurant",
+          seenIds: seenIds
         }),
       });
-      return await response.json();
+      const newBatch = await response.json();
+
+      // update seen IDs with the new items
+      if(newBatch && newBatch.length > 0) {
+        const newIds = newBatch.map(p => p.placeId);
+        setSeenIds(prev => [...prev, ...newIds]);
+      }
+
+      return newBatch;
     } catch (error) {
       console.error(error);
       return [];
     }
-  }, [currentCity]);
+  }, [currentCity, seenIds]);
 
   const handleCitySelect = async (cityData) => {
     console.log("Selected City:", cityData);
@@ -88,9 +100,12 @@ export default function GamePage() {
     setLeftPlace(null);
     setRightPlace(null);
     setPlaceQueue([]);
+    setSeenIds([]);
+
     localStorage.removeItem("rg_left");
     localStorage.removeItem("rg_right");
     localStorage.removeItem("rg_queue");
+    localStorage.removeItem("rg_seen");
 
     //fetch new batch for the new city
     const batch = await fetchBatch(cityData);
@@ -208,6 +223,7 @@ export default function GamePage() {
     localStorage.removeItem("rg_left");
     localStorage.removeItem("rg_right");
     localStorage.removeItem("rg_queue");
+    localStorage.removeItem("rg_seen");
     window.location.reload();
   };
 

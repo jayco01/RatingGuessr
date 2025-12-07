@@ -8,7 +8,7 @@ const MAX_REVIEWS = 5000;
 const TARGET_BATCH_SIZE = 10;
 const FETCH_POOL_SIZE = 40;
 const MAX_ATTEMPTS = 5;
-const RADIUS = 20000.0;
+const SEARCH_RADIUS = 20000.0;
 
 // Shuffle Algorithm to randomize the order of batch
 function shuffleArray(array) {
@@ -35,7 +35,7 @@ export async function POST(request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  let { lat, lng, category } = body;
+  let { lat, lng, category, seenIds = [] } = body;
   lat = addJitter(lat);
   lng = addJitter(lng);
 
@@ -67,7 +67,7 @@ export async function POST(request) {
         locationRestriction: {
           circle: {
             center: { latitude: lat, longitude: lng },
-            radius: RADIUS
+            radius: SEARCH_RADIUS
           }
         },
         includedPrimaryTypes: [category],
@@ -101,7 +101,9 @@ export async function POST(request) {
 
         const isDuplicate = candidates.some(p => p.placeId === place.id);
 
-        return !isDuplicate && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
+        const isSeen = seenIds.includes(place.id);
+
+        return !isDuplicate && !isSeen && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
       });
 
       for (const place of potentialPlaces) {
