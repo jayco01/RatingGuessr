@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented game page UI">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Style: Added Styling to CityPicker.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
@@ -136,7 +136,10 @@
       <workItem from="1764275103827" duration="1888000" />
       <workItem from="1764550557370" duration="4656000" />
       <workItem from="1764606299177" duration="6534000" />
-      <workItem from="1764902061062" duration="5604000" />
+      <workItem from="1764902061062" duration="6003000" />
+      <workItem from="1764949296065" duration="198000" />
+      <workItem from="1764966045552" duration="44000" />
+      <workItem from="1765070481730" duration="4028000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -330,14 +333,37 @@
       <option name="project" value="LOCAL" />
       <updated>1764907752488</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Refactor: Extracted Game State UI to separate Functions">
+      <option name="closed" value="true" />
+      <created>1764909041833</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1764909041833</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Feat: Add component to choose a city">
+      <option name="closed" value="true" />
+      <created>1765074131074</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1765074131074</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Style: Added Styling to CityPicker.js">
+      <option name="closed" value="true" />
+      <created>1765074339830</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1765074339830</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix: Switch to native fetch for Google Places" />
     <MESSAGE value="Fix: Adjusted the location filtering because i was not getting enough locations with the older filter" />
     <MESSAGE value="Feat: Display panorama in the game page" />
     <MESSAGE value="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView" />
@@ -360,6 +386,9 @@
     <MESSAGE value="Feat: Added functionality to save current game to local storage" />
     <MESSAGE value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
     <MESSAGE value="Feat: Implemented game page UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented game page UI" />
+    <MESSAGE value="Refactor: Extracted Game State UI to separate Functions" />
+    <MESSAGE value="Feat: Add component to choose a city" />
+    <MESSAGE value="Style: Added Styling to CityPicker.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="Style: Added Styling to CityPicker.js" />
   </component>
 </project>

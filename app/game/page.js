@@ -3,6 +3,7 @@
 import {useState, useEffect, useCallback} from "react";
 import PlacePhoto from "@/app/components/game/PlacePhoto";
 import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight} from "react-icons/fa";
+import CityPicker from "@/app/components/CityPicker";
 
 // Read from LocalStorage to avoids "window is undefined" error
 const loadState = (key, fallback) => {
@@ -14,6 +15,9 @@ const loadState = (key, fallback) => {
 };
 
 export default function GamePage() {
+  const [isMounted, setIsMounted] = useState(false);
+  const [currentCity, setCurrentCity] = useState(() => loadState("rg_city", null));
+
   // STATES: LOADING -> PLAYING -> ROUND_WIN -> GAMEOVER
   const [gameState, setGameState] = useState("LOADING");
   const [score, setScore] = useState(() => loadState("rg_score", 0));
@@ -25,39 +29,65 @@ export default function GamePage() {
   // The Queue (Buffer)
   const [placeQueue, setPlaceQueue] = useState(() => loadState("rg_queue", []));
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Save states to local storage whenever one of them updates
   useEffect(() => {
     localStorage.setItem("rg_score", JSON.stringify(score));
     localStorage.setItem("rg_left", JSON.stringify(leftPlace));
     localStorage.setItem("rg_right", JSON.stringify(rightPlace));
     localStorage.setItem("rg_queue", JSON.stringify(placeQueue));
-  }, [score, leftPlace, rightPlace, placeQueue]);
+    localStorage.setItem("rg_city", JSON.stringify(currentCity));
+  }, [score, leftPlace, rightPlace, placeQueue, currentCity]); // Add dependency
 
-  const TEST_CITY = {
-    lat: 40.7128,
-    lng: -74.0060,
-    category: "restaurant"
-  };
+  const fetchBatch = useCallback(async (cityOverride) => {
+    const targetCity = cityOverride || currentCity;
 
-  const fetchBatch = useCallback(async () => {
+    if (!targetCity) return [];
+
     try {
       const response = await fetch("/api/game/batch", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(TEST_CITY),
+        body: JSON.stringify({
+          lat: targetCity.lat,
+          lng: targetCity.lng,
+          category: "restaurant"
+        }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch Game Batch: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error(error);
-      return[];
+      return [];
     }
-  }, []);
+  }, [currentCity]);
+
+
+  const handleCitySelect = async (cityData) => {
+    console.log("Selected City:", cityData);
+    setCurrentCity(cityData);
+    setGameState("LOADING");
+
+    // Reset the queues for the new city
+    setLeftPlace(null);
+    setRightPlace(null);
+    setPlaceQueue([]);
+    localStorage.removeItem("rg_left");
+    localStorage.removeItem("rg_right");
+    localStorage.removeItem("rg_queue");
+
+    //fetch new batch for the new city
+    const batch = await fetchBatch(cityData);
+
+    if (batch.length >= 2) {
+      setLeftPlace(batch[0]);
+      setRightPlace(batch[1]);
+      setPlaceQueue(batch.slice(2));
+      setGameState("PLAYING");
+    }
+  };
 
   useEffect(() => {
     const initGame = async () => {
@@ -143,10 +173,41 @@ export default function GamePage() {
     window.location.reload();
   };
 
-  if(gameState === "LOADING") {
+  const clearCity = () => {
+    localStorage.removeItem("rg_city");
+    localStorage.removeItem("rg_score");
+    localStorage.removeItem("rg_left");
+    localStorage.removeItem("rg_right");
+    localStorage.removeItem("rg_queue");
+    window.location.reload();
+  };
+
+  if (!isMounted) {
+    return null;
+  }
+
+  if (!currentCity) {
+    return (
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen gap-8 p-4">
+        <h1 className="text-4xl md:text-6xl font-bold text-lime_cream text-center">
+          Rating Guessr
+        </h1>
+        <p className="text-white text-xl">Pick a city to start exploring.</p>
+        <CityPicker onCitySelect={handleCitySelect} />
+
+        <div className="flex gap-4 text-sm text-gray-400">
+          <span>Try: </span>
+          <button onClick={() => handleCitySelect({lat: 40.7128, lng: -74.0060, name: "New York"})} className="hover:text-white underline">New York</button>
+          <button onClick={() => handleCitySelect({lat: 35.6762, lng: 139.6503, name: "Tokyo"})} className="hover:text-white underline">Tokyo</button>
+        </div>
+      </div>
+    );
+  }
+
+  if(gameState === "LOADING" || !leftPlace || !rightPlace) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-evergreen text-lime_cream">
-        <div className="text-2xl font-bold">Finding Locations...</div>
+        <div className="text-2xl font-bold animate-pulse">Finding Locations in {currentCity.name}...</div>
       </div>
     );
   }
@@ -200,8 +261,33 @@ export default function GamePage() {
     </div>;
   }
 
+  if (!currentCity && gameState !== "PLAYING") {
+    return (
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-evergreen gap-8 p-4">
+        <h1 className="text-4xl md:text-6xl font-bold text-lime_cream text-center">
+          Rating Guessr
+        </h1>
+        <p className="text-white text-xl">Pick a city to start exploring.</p>
+
+        {/* The Child Component */}
+        <CityPicker onCitySelect={handleCitySelect} />
+
+        {/* For Testing */}
+        <div className="flex gap-4 text-sm text-gray-400">
+          <span>Try: </span>
+          <button onClick={() => handleCitySelect({lat: 40.7128, lng: -74.0060, name: "New York"})} className="hover:text-white underline">New York</button>
+          <button onClick={() => handleCitySelect({lat: 35.6762, lng: 139.6503, name: "Tokyo"})} className="hover:text-white underline">Tokyo</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen w-screen bg-black overflow-hidden relative">
+
+      <div className="absolute top-4 left-4 z-50 bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+        📍 {currentCity?.name}
+      </div>
 
       {/* --- LEFT CARD --- */}
       <div className="relative w-1/2 h-full border-r-4 border-white">
