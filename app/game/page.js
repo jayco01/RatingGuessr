@@ -1,9 +1,6 @@
 "use client"
 
 import {useState, useEffect, useCallback} from "react";
-import PlacePhoto from "@/app/components/game/PlacePhoto";
-import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight, FaHeart, FaSignOutAlt} from "react-icons/fa";
-import CityPicker from "@/app/components/CityPicker";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "@/app/lib/firebase";
 import { useAuth } from "@/app/hooks/useAuth";
@@ -26,6 +23,7 @@ const loadState = (key, fallback) => {
 };
 
 export default function GamePage() {
+  const BUFFER_UNDERRUN_SIZE = 2;
   const [isMounted, setIsMounted] = useState(false);
   const [currentCity, setCurrentCity] = useState(() => loadState("rg_city", null));
 
@@ -63,6 +61,8 @@ export default function GamePage() {
   const fetchBatch = useCallback(async (cityOverride) => {
     const targetCity = cityOverride || currentCity;
 
+    console.log("🚀 CLIENT: Starting Fetch Request...", targetCity);
+
     if (!targetCity) return [];
 
     try {
@@ -76,6 +76,13 @@ export default function GamePage() {
           seenIds: seenIds
         }),
       });
+
+      console.log("CLIENT: Response Status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error! status: ${response.status}`);
+      }
+
       const newBatch = await response.json();
 
       // update seen IDs with the new items
@@ -110,11 +117,19 @@ export default function GamePage() {
     //fetch new batch for the new city
     const batch = await fetchBatch(cityData);
 
+    console.log("Batch received from server:", batch);
+
     if (batch.length >= 2) {
       setLeftPlace(batch[0]);
       setRightPlace(batch[1]);
       setPlaceQueue(batch.slice(2));
       setGameState("PLAYING");
+    }else {
+      // Handle empty batch
+      console.error("Not enough places found!");
+      alert("Could not find enough places in this city. Please try another.");
+      setGameState("LOBBY");
+      setCurrentCity(null);
     }
   };
 
@@ -165,7 +180,7 @@ export default function GamePage() {
       setPlaceQueue(prev => prev.slice(1)); // Shift queue
 
       // Background fetch to keep queue full
-      if(placeQueue.length < 3) {
+      if(placeQueue.length < BUFFER_UNDERRUN_SIZE) {
         const newBatch = await fetchBatch();
 
         setPlaceQueue(prevQueue => {

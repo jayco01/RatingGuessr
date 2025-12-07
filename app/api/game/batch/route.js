@@ -5,10 +5,10 @@ export const dynamic = 'force-dynamic';
 
 const MIN_REVIEWS = 50;
 const MAX_REVIEWS = 5000;
-const TARGET_BATCH_SIZE = 10;
+const TARGET_BATCH_SIZE = 5;
 const FETCH_POOL_SIZE = 40;
 const MAX_ATTEMPTS = 5;
-const SEARCH_RADIUS = 20000.0;
+const SEARCH_RADIUS = 2000.0;
 
 // Shuffle Algorithm to randomize the order of batch
 function shuffleArray(array) {
@@ -19,10 +19,30 @@ function shuffleArray(array) {
   return array;
 }
 
-// Adds a small random offset (~1-2km) to prevent identical API calls
-function addJitter(coordinate) {
-  const jitterAmount = (Math.random() - 0.5) * 0.02;
-  return coordinate + jitterAmount;
+// Polar Coordinate Jitter Algorithm (0 to 20km radius)
+// Refer to https://www.youtube.com/watch?v=O5wjXoFrau4 when debugging
+function getJitteredCoordinates(lat, lng, maxRadiusKm = 20) {
+
+  // Pick a random distance (0 to maxRadius)
+  // sqrt(random()) for distributing evenly in the circle, otherwise points would clump in the center.
+  const r = maxRadiusKm * Math.sqrt(Math.random());
+
+  // 2. Pick a random angle (0 to 2*PI radians)
+  const theta = Math.random() * 2 * Math.PI;
+
+  // Convert Polar (distance/angle) to Cartesian offsets (km)
+  const dy = r * Math.cos(theta);
+  const dx = r * Math.sin(theta);
+
+  // Convert km offsets to degrees
+  const newLat = lat + (dy / 111.32); // Latitude: 1 deg = ~111.32 km
+
+  // convert lat to radians for the cosine function
+  const newLng = lng + (dx / (111.32 * Math.cos(lat * (Math.PI / 180)))); // Longitude: 1 deg = ~111.32 km * cos(lat)
+
+  console.log(`Jitter Jump: ${r.toFixed(2)}km away at angle ${(theta * 180 / Math.PI).toFixed(0)}°`);
+
+  return { lat: newLat, lng: newLng };
 }
 
 export async function POST(request) {
@@ -36,8 +56,15 @@ export async function POST(request) {
   }
 
   let { lat, lng, category, seenIds = [] } = body;
-  lat = addJitter(lat);
-  lng = addJitter(lng);
+  lat = Number(lat);
+  lng = Number(lng);
+
+  console.log("Input Coordinates:", { lat, lng });
+  console.log("Seen IDs Count:", seenIds.length);
+
+  const jittered = getJitteredCoordinates(lat, lng, 20);
+  lat = jittered.lat;
+  lng = jittered.lng;
 
   const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
   if (!apiKey) {
@@ -61,6 +88,7 @@ export async function POST(request) {
 
     // fetch until there is enough candidates to shuffle, or we run out of pages
     do {
+      console.log(`Fetching Page ${attempts + 1}...`);
       attempts++;
 
       const requestBody = {
@@ -92,6 +120,7 @@ export async function POST(request) {
 
       const data = await response.json();
       const rawPlaces = data.places || [];
+      console.log(`Google returned ${rawPlaces.length} raw results`);
       nextPageToken = data.nextPageToken;
 
       // Filter Logic
@@ -103,8 +132,15 @@ export async function POST(request) {
 
         const isSeen = seenIds.includes(place.id);
 
+        // log why the place was filtered out
+        if (!hasPhotos) console.log(`Dropped ${place.displayName?.text}: No Photos`);
+        if (reviewCount < MIN_REVIEWS) console.log(`Dropped ${place.displayName?.text}: Low Reviews (${reviewCount})`);
+        if (isSeen) console.log(`Dropped ${place.displayName?.text}: Already Seen`);
+
         return !isDuplicate && !isSeen && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
       });
+
+      console.log(`Kept ${potentialPlaces.length} valid candidates from this page`);
 
       for (const place of potentialPlaces) {
         const photoCollection = place.photos.slice(0, 10).map(photo => ({
@@ -126,6 +162,11 @@ export async function POST(request) {
 
       // Continue fetching until we have a enough in the pool (40 items) or hit max attempts
     } while (candidates.length < FETCH_POOL_SIZE && attempts < MAX_ATTEMPTS);
+
+    console.log(`----- BATCH FETCH COMPLETE -----`);
+    console.log(`API Calls Used: ${attempts}`);
+    console.log(`Candidates Found: ${candidates.length}`);
+    console.log(`Next Page Available: ${!!nextPageToken}`);
 
     const shuffledCandidates = shuffleArray(candidates);
 
