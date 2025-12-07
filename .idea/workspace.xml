@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Refactor: Removed repeated code in gamepage">
-      <change afterPath="$PROJECT_DIR$/app/components/LoginModal.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implement Login UI">
+      <change afterPath="$PROJECT_DIR$/app/hooks/useAuth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -139,7 +139,7 @@
       <workItem from="1764902061062" duration="6003000" />
       <workItem from="1764949296065" duration="198000" />
       <workItem from="1764966045552" duration="44000" />
-      <workItem from="1765070481730" duration="7179000" />
+      <workItem from="1765070481730" duration="8322000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -381,16 +381,37 @@
       <option name="project" value="LOCAL" />
       <updated>1765076015887</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Feat: Added handleGoogleLogin function">
+      <option name="closed" value="true" />
+      <created>1765077753378</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1765077753378</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Feat: Added handleEmailAuth function">
+      <option name="closed" value="true" />
+      <created>1765078148433</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1765078148433</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Feat: Implement Login UI">
+      <option name="closed" value="true" />
+      <created>1765078629235</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1765078629235</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Added PlacePhoto.js" />
-    <MESSAGE value="Feat: Added Photo attribution information" />
-    <MESSAGE value="Fix: Hydration error" />
     <MESSAGE value="Feat: Extract 10 photos instead of 1" />
     <MESSAGE value="Feat: Add Functionality to prevent ties from happening" />
     <MESSAGE value="Feat: Updated to display carosel of photos" />
@@ -413,6 +434,9 @@
     <MESSAGE value="Feat: Implemented CityPicker in the game page" />
     <MESSAGE value="Feat: Implemented a function to change the chosen city" />
     <MESSAGE value="Refactor: Removed repeated code in gamepage" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor: Removed repeated code in gamepage" />
+    <MESSAGE value="Feat: Added handleGoogleLogin function" />
+    <MESSAGE value="Feat: Added handleEmailAuth function" />
+    <MESSAGE value="Feat: Implement Login UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implement Login UI" />
   </component>
 </project>
