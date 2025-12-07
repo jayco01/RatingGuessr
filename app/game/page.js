@@ -2,8 +2,12 @@
 
 import {useState, useEffect, useCallback} from "react";
 import PlacePhoto from "@/app/components/game/PlacePhoto";
-import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight} from "react-icons/fa";
+import {FaArrowUp, FaArrowDown, FaStar, FaRedo, FaArrowRight, FaHeart, FaSignOutAlt} from "react-icons/fa";
 import CityPicker from "@/app/components/CityPicker";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "@/app/lib/firebase";
+import { useAuth } from "@/app/hooks/useAuth";
+import LoginModal from "@/app/components/LoginModal";
 
 // Read from LocalStorage to avoids "window is undefined" error
 const loadState = (key, fallback) => {
@@ -17,6 +21,10 @@ const loadState = (key, fallback) => {
 export default function GamePage() {
   const [isMounted, setIsMounted] = useState(false);
   const [currentCity, setCurrentCity] = useState(() => loadState("rg_city", null));
+
+  // Auth States
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user } = useAuth();
 
   // STATES: LOADING -> PLAYING -> ROUND_WIN -> GAMEOVER
   const [gameState, setGameState] = useState("LOADING");
@@ -64,7 +72,6 @@ export default function GamePage() {
     }
   }, [currentCity]);
 
-
   const handleCitySelect = async (cityData) => {
     console.log("Selected City:", cityData);
     setCurrentCity(cityData);
@@ -106,7 +113,7 @@ export default function GamePage() {
       }
     };
     initGame();
-  }, [fetchBatch])
+  }, [fetchBatch, currentCity])
 
 
   const handleGuess = (guess) => {
@@ -163,6 +170,21 @@ export default function GamePage() {
       setGameState("LOADING");
     }
   };
+
+  const handleFavorite = () => {
+    if (!user) {
+      setShowLoginModal(true); // Open modal if guest
+    } else {
+      console.log("Saving favorite for user:", user.uid);
+      // todo: implement firestore logic to save favourites
+    }
+  };
+
+  const handleLogout = () => {
+    const auth = getAuth(app);
+    signOut(auth);
+  };
+
 
   const resetGame = () => {
     localStorage.removeItem("rg_score");
