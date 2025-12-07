@@ -101,27 +101,29 @@ export default function CityPicker({ onCitySelect }) {
   };
 
   return (
-    <div>
+    <div className="relative z-50 w-full max-w-md">
       <input
         type="text"
         value={query}
         onChange={handleInputChange}
         placeholder="Search for a city (e.g. Tokyo)..."
+        className="w-full px-4 py-3 rounded-full text-black shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500"
       />
 
       {isOpen && predictions.length > 0 && (
-        <ul>
+        <ul className="absolute top-14 left-0 w-full bg-white rounded-xl shadow-xl overflow-hidden text-black">
           {predictions.map((item, index) => {
             const pred = item.placePrediction;
-            if (!pred) return null;
+            if (!pred) return null; // Guard clause
 
             return (
               <li
                 key={pred.placeId || index}
                 onClick={() => handleSelect(item)}
+                className="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-none flex flex-col"
               >
-                <span>{pred.structuredFormat.mainText.text}</span>
-                <span>{pred.structuredFormat.secondaryText?.text}</span>
+                <span className="font-bold">{pred.structuredFormat.mainText.text}</span>
+                <span className="text-xs text-gray-500">{pred.structuredFormat.secondaryText?.text}</span>
               </li>
             );
           })}
