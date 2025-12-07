@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented login/logout function and refactored UI into smaller suc-components">
-      <change afterPath="$PROJECT_DIR$/app/components/game/GameHeader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/components/game/LeftCard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/components/game/LobbyView.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/components/game/RightCard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/components/game/ScoreBoard.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Refactor: Separated Sub-components from MainPage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/game/batch/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +140,7 @@
       <workItem from="1764949296065" duration="198000" />
       <workItem from="1764966045552" duration="44000" />
       <workItem from="1765070481730" duration="10661000" />
-      <workItem from="1765133498194" duration="298000" />
+      <workItem from="1765133498194" duration="1436000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -435,14 +430,21 @@
       <option name="project" value="LOCAL" />
       <updated>1765081110262</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Refactor: Separated Sub-components from MainPage">
+      <option name="closed" value="true" />
+      <created>1765133834823</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1765133834823</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Updated the props passed to PlacePhoto in the main game component" />
     <MESSAGE value="Feat: Added Tailwind theme style" />
     <MESSAGE value="Refactor: Deleted the default homepage" />
     <MESSAGE value="Feat: Added a new Fetch logic" />
@@ -467,6 +469,7 @@
     <MESSAGE value="Feat: Added useAuth hook" />
     <MESSAGE value="Feat: Added Auth logic in game" />
     <MESSAGE value="Feat: Implemented login/logout function and refactored UI into smaller suc-components" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented login/logout function and refactored UI into smaller suc-components" />
+    <MESSAGE value="Refactor: Separated Sub-components from MainPage" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor: Separated Sub-components from MainPage" />
   </component>
 </project>
