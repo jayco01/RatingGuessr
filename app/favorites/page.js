@@ -39,4 +39,15 @@ export default function FavoritesPage() {
 
   }, [user]);
 
+  const handleDelete = async (placeId) => {
+    if(!confirm("Remove this place from favorites?")) return;
+
+    try {
+      await deleteDoc(doc(db, "users", user.id, "favorites", placeId));
+      toast.success("Removed from favorites.");
+    } catch (error) {
+      toast.error("Could not delete item");
+    }
+  };
+
 }
