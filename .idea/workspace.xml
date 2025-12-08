@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added day since last played tracker">
-      <change afterPath="$PROJECT_DIR$/app/api/place/details/route.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added API to fetch places details to display favourites information">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -460,14 +461,21 @@
       <option name="project" value="LOCAL" />
       <updated>1765143880005</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Feat: Added API to fetch places details to display favourites information">
+      <option name="closed" value="true" />
+      <created>1765153463134</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1765153463134</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Imported custom Css to globals.css" />
     <MESSAGE value="Feat: Display left and right places" />
     <MESSAGE value="Feat: Added Function handle next round and reset game" />
     <MESSAGE value="Fis: Added client side logic to prevent ties when adding a new batch" />
@@ -492,6 +500,7 @@
     <MESSAGE value="Feat: Implemented seenId array to keep track of seen places" />
     <MESSAGE value="Feat: Added timeout behaviour when fetching fails and no new places are found" />
     <MESSAGE value="Feat: Added day since last played tracker" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added day since last played tracker" />
+    <MESSAGE value="Feat: Added API to fetch places details to display favourites information" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added API to fetch places details to display favourites information" />
   </component>
 </project>

@@ -2,9 +2,11 @@
 
 import {useState, useEffect, useCallback} from "react";
 import { getAuth, signOut } from "firebase/auth";
-import { app } from "@/app/lib/firebase";
+import { app, db } from "@/app/lib/firebase";
 import { useAuth } from "@/app/hooks/useAuth";
 import LoginModal from "@/app/components/LoginModal";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { Toaster, toast } from "react-hot-toast";
 
 // Sub-Components
 import LobbyView from "@/app/components/game/LobbyView";
@@ -253,12 +255,39 @@ export default function GamePage() {
     }
   };
 
-  const handleFavorite = () => {
+  const handleFavorite = async () => {
     if (!user) {
-      setShowLoginModal(true); // Open modal if guest
-    } else {
-      console.log("Saving favorite for user:", user.uid);
-      // todo: implement firestore logic to save favorites
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (!leftPlace) return;
+
+    const toastId = toast.loading("Saving location...");
+
+    try {
+      // Fetch Rich Details from Server Proxy
+      const response = await fetch(`/api/place/details?placeId=${leftPlace.placeId}`);
+      const details = await response.json();
+
+      const favoriteData = {
+        placeId: leftPlace.placeId,
+        name: leftPlace.name,
+        rating: leftPlace.rating,
+        photoName: leftPlace.photos?.[0]?.name || null, // save one photo for the dashboard
+        address: details.formattedAddress || "Address not available",
+        googleMapsUri: details.googleMapsUri || null,
+        city: currentCity.name,
+        savedAt: serverTimestamp()
+      };
+
+      await setDoc(doc(db, "users", user.uid, "favorites", leftPlace.placeId), favoriteData);
+
+      toast.success("Saved to favorites!", { id: toastId });
+
+    } catch (error) {
+      console.error("Save failed:", error);
+      toast.error("Failed to save location.", { id: toastId });
     }
   };
 
@@ -305,6 +334,8 @@ export default function GamePage() {
 
   return (
     <div className="flex h-screen w-screen bg-black overflow-hidden relative">
+      <Toaster position="bottom-center" toastOptions={{ style: { minWidth: '250px' } }} />
+
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
 
       <GameHeader
