@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented favourite function when user click on the heart Icon">
-      <change afterPath="$PROJECT_DIR$/app/favorites/page.js" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Add handleDelete function in favorites">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/components/game/GameHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/game/GameHeader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/favorites/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/favorites/page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -476,15 +479,29 @@
       <option name="project" value="LOCAL" />
       <updated>1765154715592</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Feat: Add favourites collection 'subscriber' function">
+      <option name="closed" value="true" />
+      <created>1765155349960</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1765155349960</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Feat: Add handleDelete function in favorites">
+      <option name="closed" value="true" />
+      <created>1765155553561</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1765155553561</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Added Function handle next round and reset game" />
-    <MESSAGE value="Fis: Added client side logic to prevent ties when adding a new batch" />
     <MESSAGE value="Fix: Added client side logic to prevent ties when adding a new batch" />
     <MESSAGE value="Feat: Added functionality to save current game to local storage" />
     <MESSAGE value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
@@ -508,6 +525,8 @@
     <MESSAGE value="Feat: Added day since last played tracker" />
     <MESSAGE value="Feat: Added API to fetch places details to display favourites information" />
     <MESSAGE value="Feat: Implemented favourite function when user click on the heart Icon" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented favourite function when user click on the heart Icon" />
+    <MESSAGE value="Feat: Add favourites collection 'subscriber' function" />
+    <MESSAGE value="Feat: Add handleDelete function in favorites" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Add handleDelete function in favorites" />
   </component>
 </project>

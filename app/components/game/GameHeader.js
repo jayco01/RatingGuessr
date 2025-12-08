@@ -1,6 +1,7 @@
 "use client";
 
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaHeart } from "react-icons/fa";
+import Link from "next/link";
 
 export default function GameHeader({ currentCity, user, onClearCity, onLogout, onLogin }) {
   return (
@@ -18,24 +19,34 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
         </button>
       </div>
 
-      {/* Top Right: User Profile */}
-      <div className="absolute top-4 right-4 z-50">
-        {user ? (
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-2 bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm hover:bg-red-900/80 transition text-sm border border-white/10"
-          >
-            <div className="w-6 h-6 rounded-full bg-hunter_green flex items-center justify-center text-xs overflow-hidden">
-              {/* Fallback avatar logic */}
-              {user.photoURL ? (
-                <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
-              ) : (
-                user.email?.[0]?.toUpperCase()
-              )}
-            </div>
-            <span className="hidden md:inline">Sign Out</span>
-            <FaSignOutAlt />
-          </button>
+        {/* Top Right: User Profile */}
+        <div className="absolute top-4 right-4 z-50 flex flex-row gap-2">
+          {user && (
+            <Link
+              href="/favorites"
+              className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-full backdrop-blur-sm transition flex items-center justify-center border border-white/10"
+              title="My Favorites"
+            >
+              Go to Favorites
+              <FaHeart className="text-red-400 ml-2" />
+            </Link>
+          )}
+          {user ? (
+            <button
+              onClick={onLogout}
+              className="flex items-center gap-2 bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm hover:bg-red-900/80 transition text-sm border border-white/10"
+            >
+              <div className="w-6 h-6 rounded-full bg-hunter_green flex items-center justify-center text-xs overflow-hidden">
+                {/* Fallback avatar logic */}
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                ) : (
+                  user.email?.[0]?.toUpperCase()
+                )}
+              </div>
+              <span className="hidden md:inline">Sign Out</span>
+              <FaSignOutAlt />
+            </button>
         ) : (
           <button
             onClick={onLogin}
@@ -44,6 +55,7 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
             Login
           </button>
         )}
+
       </div>
     </>
   );
