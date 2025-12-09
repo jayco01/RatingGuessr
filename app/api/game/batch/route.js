@@ -1,215 +1,203 @@
 import { NextResponse } from "next/server";
 
-// Force dynamic to ensure the server doesn't cache the API response
 export const dynamic = 'force-dynamic';
 
-const MIN_REVIEWS = 50;
-const MAX_REVIEWS = 5000;
-const TARGET_BATCH_SIZE = 5;
-const FETCH_POOL_SIZE = 40;
-const MAX_ATTEMPTS = 10;
-const SEARCH_RADIUS = 2000.0;
+// --- Configuration Constants ---
+const CONFIG = {
+  REVIEWS: { MIN: 50, MAX: 5000 },
+  BATCH_SIZE: 5,
+  POOL_SIZE: 40,
+  MAX_API_ATTEMPTS: 10,
+  SEARCH_RADIUS_METERS: 2000.0,
+  MAX_JITTER_RADIUS_KM: 20,
+  EARTH_RADIUS_KM: 111.32 // Approximate km per degree of latitude
+};
 
-// Shuffle Algorithm to randomize the order of batch
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
 
-// Polar Coordinate Jitter Algorithm (0 to 20km radius)
-// Refer to https://www.youtube.com/watch?v=O5wjXoFrau4 when debugging
-function getJitteredCoordinates(lat, lng, maxRadiusKm = 20) {
 
-  // Pick a random distance (0 to maxRadius)
-  // sqrt(random()) for distributing evenly in the circle, otherwise points would clump in the center.
-  const r = maxRadiusKm * Math.sqrt(Math.random());
-
-  // Pick a random angle (0 to 2*PI radians)
-  const theta = Math.random() * 2 * Math.PI;
-
-  // Convert Polar (distance/angle) to Cartesian offsets (km)
-  const dy = r * Math.cos(theta);
-  const dx = r * Math.sin(theta);
-
-  // Convert km offsets to degrees
-  const newLat = lat + (dy / 111.32); // Latitude: 1 deg = ~111.32 km
-
-  // convert lat to radians for the cosine function
-  const newLng = lng + (dx / (111.32 * Math.cos(lat * (Math.PI / 180)))); // Longitude: 1 deg = ~111.32 km * cos(lat)
-
-  console.log(`Jitter Jump: ${r.toFixed(2)}km away at angle ${(theta * 180 / Math.PI).toFixed(0)}°`);
-
-  return { lat: newLat, lng: newLng, dist: r };
-}
-
+// --- Main Route Handler ---
 export async function POST(request) {
-  console.log("----- API REQUEST STARTED: /api/game/batch -----");
+  console.log("----- API: Batch Fetch Started -----");
 
   let body;
   try {
     body = await request.json();
   } catch (e) {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  let { lat: anchorLat, lng: anchorLng, category, seenIds = [] } = body;
-  anchorLat = Number(anchorLat);
-  anchorLng = Number(anchorLng);
-
-  console.log("Input Coordinates:", { anchorLat, anchorLng });
-  console.log("Seen IDs Count:", seenIds.length);
-
+  const { lat: anchorLat, lng: anchorLng, category, seenIds = [] } = body;
   const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-  }
 
-  try {
-    const fieldMask = [
-      "places.id",
-      "places.displayName",
-      "places.location",
-      "places.rating",
-      "places.userRatingCount",
-      "places.primaryType",
-      "places.photos"
-    ].join(",");
+  if (!apiKey) return NextResponse.json({ error: "Server Config Error" }, { status: 500 });
 
-    let candidates = [];
-    let nextPageToken = null;
-    let attempts = 0;
+  const candidatePool = [];
+  let googleNextPageToken = null;
+  let apiCallCount = 0;
+  let currentSearchCenter = { lat: Number(anchorLat), lng: Number(anchorLng) };
+  let shouldJumpToNewLocation = true;
 
-    // Track current search center
-    let searchLat = anchorLat;
-    let searchLng = anchorLng;
-    let isNewLocation = true;
+  // --- Fetch Loop ---
+  do {
+    apiCallCount++;
 
-    // fetch until there is enough candidates to shuffle, or we run out of pages
-    do {
-      attempts++;
+    if (shouldJumpToNewLocation) {
+      currentSearchCenter = calculateJitteredLocation(
+        Number(anchorLat),
+        Number(anchorLng),
+        CONFIG.MAX_JITTER_RADIUS_KM
+      );
+      shouldJumpToNewLocation = false;
+    }
 
-      //If new location is needed (Start or Dead End), Jitter from the Anchor
-      if (isNewLocation) {
-        const jitter = getJitteredCoordinates(anchorLat, anchorLng, 20);
-        searchLat = jitter.lat;
-        searchLng = jitter.lng;
-        isNewLocation = false;
-        console.log(`Jittering to new spot: ${jitter.dist.toFixed(2)}km away (Attempt ${attempts})`);
-      }
+    // Prepare Google Request
+    const googlePayload = {
+      locationRestriction: {
+        circle: {
+          center: {
+            latitude: currentSearchCenter.lat,
+            longitude: currentSearchCenter.lng
+          },
+          radius: CONFIG.SEARCH_RADIUS_METERS
+        }
+      },
+      includedPrimaryTypes: [category],
+      maxResultCount: 20,
+      ...(googleNextPageToken && { pageToken: googleNextPageToken })
+    };
 
-      const requestBody = {
-        locationRestriction: {
-          circle: {
-            center: { latitude: searchLat, longitude: searchLng },
-            radius: SEARCH_RADIUS
-          }
-        },
-        includedPrimaryTypes: [category],
-        maxResultCount: 20,
-        ...(nextPageToken && { pageToken: nextPageToken })
-      };
+    console.log(`Fetching Page ${apiCallCount}...`);
 
-      console.log(`Fetching Page ${attempts + 1}...`);
-
+    try {
       const response = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-Goog-Api-Key': apiKey,
-          'X-Goog-FieldMask': fieldMask
+          'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.rating,places.userRatingCount,places.photos'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(googlePayload)
       });
 
       if (!response.ok) {
-        console.error(`Google Error: ${response.status}`);
-        isNewLocation = true;
-        nextPageToken = null;
+        console.error(`Google API Error: ${response.status}`);
+        shouldJumpToNewLocation = true; // Try a new spot if this one fails
+        googleNextPageToken = null;
         continue;
       }
 
       const data = await response.json();
-      const rawPlaces = data.places || [];
-      console.log(`Google returned ${rawPlaces.length} raw results`);
-      nextPageToken = data.nextPageToken;
+      const rawResults = data.places || [];
 
-      // Filter Logic
-      const potentialPlaces = rawPlaces.filter(place => {
-        const reviewCount = place.userRatingCount || 0;
-        const hasPhotos = place.photos && place.photos.length > 0;
+      // Filter out Invalidate Places
+      const validPlaces = rawResults.filter(place => isPlaceEligible(place, candidatePool, seenIds));
 
-        const isDuplicate = candidates.some(p => p.placeId === place.id);
-
-        const isSeen = seenIds.includes(place.id);
-
-        // log why the place was filtered out
-        if (!hasPhotos) console.log(`Dropped ${place.displayName?.text}: No Photos`);
-        if (reviewCount < MIN_REVIEWS) console.log(`Dropped ${place.displayName?.text}: Low Reviews (${reviewCount})`);
-        if (isSeen) console.log(`Dropped ${place.displayName?.text}: Already Seen`);
-
-        return !isDuplicate && !isSeen && hasPhotos && reviewCount >= MIN_REVIEWS && reviewCount <= MAX_REVIEWS;
-      });
-
-      console.log(`Kept ${potentialPlaces.length} valid candidates from this page`);
-
-      for (const place of potentialPlaces) {
-        const photoCollection = place.photos.slice(0, 10).map(photo => ({
-          name: photo.name,
-          attributions: photo.authorAttributions
-        }));
-
-        candidates.push({
+      validPlaces.forEach(place => {
+        candidatePool.push({
           placeId: place.id,
           name: place.displayName.text,
           rating: place.rating,
           userRatingCount: place.userRatingCount,
-          photos: photoCollection
+          photos: place.photos.slice(0, 10).map(p => ({ name: p.name, attributions: p.authorAttributions }))
         });
-      }
+      });
 
-      // CRITICAL: Decide next step
-      if (data.nextPageToken) {
-        // If this location has more pages, stay here!
-        nextPageToken = data.nextPageToken;
-        isNewLocation = false;
+      console.log(`Added ${validPlaces.length} valid places. Pool Size: ${candidatePool.length}`);
+
+      if (data.nextPageToken) { // is there is a next page then keep using the current coordinates
+        googleNextPageToken = data.nextPageToken;
       } else {
-        // If this location is dry, force a JUMP to a new spot next loop!
-        console.log("🚫 Location exhausted. Preparing to jump...");
-        nextPageToken = null;
-        isNewLocation = true;
+        console.log("Location exhausted. Triggering Jump.");
+        googleNextPageToken = null;
+        shouldJumpToNewLocation = true;
       }
 
-      // Continue fetching until we have a enough in the pool (40 items) or hit max attempts
-    } while (candidates.length < FETCH_POOL_SIZE && attempts < MAX_ATTEMPTS);
-
-    console.log(`----- BATCH FETCH COMPLETE -----`);
-    console.log(`API Calls Used: ${attempts}`);
-    console.log(`Candidates Found: ${candidates.length}`);
-    console.log(`Next Page Available: ${!!nextPageToken}`);
-
-    const shuffledCandidates = shuffleArray(candidates);
-
-    let validBatch = [];
-    let lastRating = null;
-
-    for (const place of shuffledCandidates) {
-      if (validBatch.length >= TARGET_BATCH_SIZE) break;
-
-      //No-Tie Check
-      const isTie = lastRating !== null && Math.abs(place.rating - lastRating) < 0.1;
-
-      if (!isTie) {
-        validBatch.push(place);
-        lastRating = place.rating;
-      }
+    } catch (err) {
+      console.error("Fetch Exception:", err);
+      break;
     }
 
-    return NextResponse.json(validBatch);
+  } while (candidatePool.length < CONFIG.POOL_SIZE && apiCallCount < CONFIG.MAX_API_ATTEMPTS);
 
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  // --- Post Processing ---
+  const shuffledCandidates = randomizeListOrder(candidatePool);
+  const finalBatch = [];
+  let previousRating = null;
+
+  // Tie-Breaker Logic: Ensure no two consecutive places have very similar ratings
+  for (const place of shuffledCandidates) {
+    if (finalBatch.length >= CONFIG.BATCH_SIZE) break;
+
+    const isRatingTooSimilar = previousRating !== null && Math.abs(place.rating - previousRating) < 0.1;
+
+    if (!isRatingTooSimilar) {
+      finalBatch.push(place);
+      previousRating = place.rating;
+    }
   }
+
+  return NextResponse.json(finalBatch);
+}
+
+
+
+//-------------------------------
+// Helper Functions
+//-------------------------------
+
+function isPlaceEligible(place, currentPool, historyOfSeenIds) {
+  const reviewCount = place.userRatingCount || 0;
+  const hasPhotos = place.photos && place.photos.length > 0;
+  const isAlreadyInPool = currentPool.some(p => p.placeId === place.id);
+  const isInHistory = historyOfSeenIds.includes(place.id);
+
+  if (!hasPhotos) return false;
+  if (isAlreadyInPool) return false;
+  if (isInHistory) return false;
+  if (reviewCount < CONFIG.REVIEWS.MIN || reviewCount > CONFIG.REVIEWS.MAX) return false;
+
+  return true;
+}
+
+/**
+ * Calculates a new random coordinate within a circular area.
+ * Uses Polar Coordinates to ensure uniform distribution.
+ */
+function calculateJitteredLocation(anchorLat, anchorLng, maxRadiusKm) {
+
+  // Generate random polar coordinates
+  // sqrt(random) to prevent clustering at the center of the circle
+  const randomDistanceKm = maxRadiusKm * Math.sqrt(Math.random());
+  const randomAngleRadians = Math.random() * 2 * Math.PI;
+
+  // Convert Polar (distance/angle) to Cartesian offsets (km)
+  const kilometersNorth = randomDistanceKm * Math.cos(randomAngleRadians);
+  const kilometersEast = randomDistanceKm * Math.sin(randomAngleRadians);
+
+  // Convert km offsets to coordinate degrees
+  const latitudeOffsetDegrees = kilometersNorth / CONFIG.EARTH_RADIUS_KM;
+
+  // Longitude lines shrink as we move away from the equator, so we adjust by cos(lat)
+  const longitudeScaler = Math.cos(anchorLat * (Math.PI / 180));
+  const longitudeOffsetDegrees = kilometersEast / (CONFIG.EARTH_RADIUS_KM * longitudeScaler);
+
+  const newLocation = {
+    lat: anchorLat + latitudeOffsetDegrees,
+    lng: anchorLng + longitudeOffsetDegrees,
+    distanceFromAnchor: randomDistanceKm
+  };
+
+  console.log(`Jittered ${newLocation.distanceFromAnchor.toFixed(2)}km to new center.`);
+  return newLocation;
+}
+
+// Randomize the order of places in the validated list of places
+// This hopefully makes the game feel less repetitive if a person lives in a small city with limited options of "places"
+function randomizeListOrder(list) {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }

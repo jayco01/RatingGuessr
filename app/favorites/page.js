@@ -58,7 +58,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-evergreen p-8">
+    <div className="min-h-screen bg-evergreen-200 p-8">
       <Toaster position="bottom-center" />
 
       {/* Header */}

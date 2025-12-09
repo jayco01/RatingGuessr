@@ -8,12 +8,12 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
     <>
       {/* Top Left: City Controls */}
       <div className="absolute top-4 left-4 z-50 flex items-center gap-2">
-        <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm border border-white/10 shadow-sm">
+        <div className="bg-black/50 text-white px-4 py-3 font-semibold rounded-full text-sm backdrop-blur-sm border border-white/10 shadow-sm">
           📍 {currentCity?.name}
         </div>
         <button
           onClick={onClearCity}
-          className="bg-white/20 hover:bg-red-600 hover:text-white text-white/80 text-xs px-3 py-1.5 rounded-full backdrop-blur-sm transition border border-white/10"
+          className="bg-white/20 hover:bg-lime-700 hover:text-white text-white/80 text-sm font-semibold px-4 py-3 rounded-full backdrop-blur-sm transition border border-white/10"
         >
           Change City
         </button>
@@ -24,7 +24,7 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
           {user && (
             <Link
               href="/favorites"
-              className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-full backdrop-blur-sm transition flex items-center justify-center border border-white/10"
+              className="bg-white/10 hover:bg-white/20 text-white font-semibold px-4 py-3 rounded-full backdrop-blur-sm transition flex items-center justify-center border border-white/10"
               title="My Favorites"
             >
               Go to Favorites
@@ -34,7 +34,7 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
           {user ? (
             <button
               onClick={onLogout}
-              className="flex items-center gap-2 bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm hover:bg-red-900/80 transition text-sm border border-white/10"
+              className="flex items-center gap-2 bg-black/50 text-white font-semibold px-4 py-2 rounded-full backdrop-blur-sm hover:bg-red-900/80 transition text-sm border border-white/10"
             >
               <div className="w-6 h-6 rounded-full bg-hunter_green flex items-center justify-center text-xs overflow-hidden">
                 {/* Fallback avatar logic */}
