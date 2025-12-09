@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Implemented favorites page">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added a json file that contains a list of restaurant chains">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/game/batch/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/game/batch/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/components/game/GameHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/components/game/GameHeader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/favorites/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/favorites/page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/excludeChains.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/excludeChains.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +135,8 @@
       <workItem from="1765070481730" duration="10661000" />
       <workItem from="1765133498194" duration="6399000" />
       <workItem from="1765245494663" duration="49000" />
-      <workItem from="1765300036181" duration="1939000" />
+      <workItem from="1765300036181" duration="3186000" />
+      <workItem from="1765310971917" duration="4072000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -505,14 +506,21 @@
       <option name="project" value="LOCAL" />
       <updated>1765156513116</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Feat: Added a json file that contains a list of restaurant chains">
+      <option name="closed" value="true" />
+      <created>1765315691390</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1765315691390</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Feat: Added functionality to save current game to local storage" />
     <MESSAGE value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
     <MESSAGE value="Feat: Implemented game page UI" />
     <MESSAGE value="Refactor: Extracted Game State UI to separate Functions" />
@@ -537,6 +545,7 @@
     <MESSAGE value="Feat: Add favourites collection 'subscriber' function" />
     <MESSAGE value="Feat: Add handleDelete function in favorites" />
     <MESSAGE value="Feat: Implemented favorites page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Implemented favorites page" />
+    <MESSAGE value="Feat: Added a json file that contains a list of restaurant chains" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added a json file that contains a list of restaurant chains" />
   </component>
 </project>

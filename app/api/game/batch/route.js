@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import RAW_CHAIN_LIST from "@/app/lib/excludeChains.json"
 
 export const dynamic = 'force-dynamic';
 
@@ -10,10 +11,13 @@ const CONFIG = {
   MAX_API_ATTEMPTS: 10,
   SEARCH_RADIUS_METERS: 2000.0,
   MAX_JITTER_RADIUS_KM: 20,
-  EARTH_RADIUS_KM: 111.32 // Approximate km per degree of latitude
+  EARTH_RADIUS_KM: 111.32, // Approximate km per degree of latitude
+  SHORT_CHAIN_NAME: 10
 };
 
-
+// Prepare the "Chain" Places
+const normalizeText = (text) => text?.toLowerCase().replace(/['.]/g, ""); //remove punctuations
+const BLOCKED_CHAINS_SET = new Set(RAW_CHAIN_LIST.map(name => normalizeText(name)));
 
 // --- Main Route Handler ---
 export async function POST(request) {
@@ -140,16 +144,41 @@ export async function POST(request) {
 }
 
 
-
 //-------------------------------
 // Helper Functions
 //-------------------------------
+
 
 function isPlaceEligible(place, currentPool, historyOfSeenIds) {
   const reviewCount = place.userRatingCount || 0;
   const hasPhotos = place.photos && place.photos.length > 0;
   const isAlreadyInPool = currentPool.some(p => p.placeId === place.id);
   const isInHistory = historyOfSeenIds.includes(place.id);
+
+  const name = place.displayName?.text;
+  const normalizedName = normalizeText(name)
+
+  // exact match check of a "chain"
+  if (BLOCKED_CHAINS_SET.has(normalizedName)) {
+    console.log(`${name} not included to fetched list because it is an exact match of a "chain' place`)
+    return false
+  }
+
+  // Partial match check: check if the place name 'starts with' any of our blocked chains
+  const isChainVariation = RAW_CHAIN_LIST.some(chain => {
+    const cleanChain = normalizeText(chain);
+
+    // if  the chain name is short then only filter out exact matches
+    if (cleanChain.length > CONFIG.SHORT_CHAIN_NAME) return false;
+
+    // only filtering out places that start with a chain name since most "chains" chain have their name first before location or branch name
+    return normalizedName.startsWith(cleanChain);
+  });
+
+  if (isChainVariation) {
+    console.log(`${name} not included to fetched list because it is a partial match of a "chain' place`);
+    return false;
+  }
 
   if (!hasPhotos) return false;
   if (isAlreadyInPool) return false;

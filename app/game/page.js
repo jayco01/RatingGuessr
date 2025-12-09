@@ -106,7 +106,7 @@ export default function GamePage() {
       console.log("CLIENT: Response Status:", response.status);
 
       if (!response.ok) {
-        throw new Error(`HTTP Error! status: ${response.status}`);
+        console.error(`HTTP Error! status: ${response.status}`);
       }
 
       const newBatch = await response.json();
