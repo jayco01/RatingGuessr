@@ -87,8 +87,6 @@ export default function GamePage() {
     const targetCity = cityOverride || currentCity;
     const idsToUse = customSeenIds || seenIds;
 
-    console.log("🚀 CLIENT: Starting Fetch Request...", targetCity);
-
     if (!targetCity) return [];
 
     try {
@@ -102,8 +100,6 @@ export default function GamePage() {
           seenIds: idsToUse
         }),
       });
-
-      console.log("CLIENT: Response Status:", response.status);
 
       if (!response.ok) {
         console.error(`HTTP Error! status: ${response.status}`);
@@ -125,7 +121,6 @@ export default function GamePage() {
   }, [currentCity, seenIds]);
 
   const handleCitySelect = async (cityData) => {
-    console.log("Selected City:", cityData);
     setCurrentCity(cityData);
     setGameState("LOADING");
 
@@ -155,8 +150,6 @@ export default function GamePage() {
 
     } catch (err) {
       if (err.message === "TIMEOUT") {
-        console.warn(`Fetch timed out (>${FETCH_TIMEOUT_MS}s). Clearing history to allow repeats.`);
-
         // Clear History and retry if fetching takes over the FETCH_TIMEOUT_MS window
         localStorage.removeItem("rg_seen");
         setSeenIds([]);
@@ -166,8 +159,6 @@ export default function GamePage() {
         console.error("Fetch failed:", err);
       }
     }
-
-    console.log("Batch received from server:", batch);
 
     if (batch && batch.length >= 2) {
       setLeftPlace(batch[0]);
