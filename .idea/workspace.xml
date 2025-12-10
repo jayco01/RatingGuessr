@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Styles: Improved responsive for mobile view">
+      <change afterPath="$PROJECT_DIR$/public/RatingGuessr_favicon.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +78,7 @@
       <recent name="C:\CPRG_306\rating-guessr\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\CPRG_306\rating-guessr\public" />
       <recent name="C:\CPRG_306\rating-guessr\app\components\game" />
       <recent name="C:\CPRG_306\rating-guessr\app\lib" />
     </key>
@@ -137,7 +140,7 @@
       <workItem from="1765133498194" duration="6399000" />
       <workItem from="1765245494663" duration="49000" />
       <workItem from="1765300036181" duration="3186000" />
-      <workItem from="1765310971917" duration="10619000" />
+      <workItem from="1765310971917" duration="12443000" />
     </task>
     <task id="LOCAL-00003" summary="Feat: Display panorama in the game page">
       <option name="closed" value="true" />
