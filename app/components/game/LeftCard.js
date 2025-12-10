@@ -5,7 +5,7 @@ import { FaHeart } from "react-icons/fa";
 
 export default function LeftCard({ place, onFavorite }) {
   return (
-    <div className="relative w-1/2 h-full border-r-4 border-white">
+    <div className="relative md:w-1/2 md:h-full h-1/2 border-r-4 border-white">
       {/* Heart Button */}
       <button
         onClick={onFavorite}

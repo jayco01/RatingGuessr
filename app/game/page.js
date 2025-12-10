@@ -340,7 +340,7 @@ export default function GamePage() {
 
       <ScoreBoard score={score} />
 
-      <div className="flex w-full h-full">
+      <div className="flex w-full h-full flex-col md:flex-row">
         <LeftCard place={leftPlace} onFavorite={handleFavorite} />
         <RightCard
           place={rightPlace}

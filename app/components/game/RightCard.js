@@ -5,7 +5,7 @@ import { FaArrowUp, FaArrowDown, FaRedo, FaArrowRight } from "react-icons/fa";
 
 export default function RightCard({ place, gameState, onGuess, onNext, onReset }) {
   return (
-    <div className="relative w-1/2 h-full">
+    <div className="relative md:w-1/2 md:h-full h-1/2">
       <PlacePhoto photos={place?.photos} altText={place?.name} />
 
       <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center p-4">
