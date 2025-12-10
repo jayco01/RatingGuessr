@@ -12,7 +12,7 @@ const CONFIG = {
   SEARCH_RADIUS_METERS: 2000.0,
   MAX_JITTER_RADIUS_KM: 20,
   EARTH_RADIUS_KM: 111.32, // Approximate km per degree of latitude
-  SHORT_CHAIN_NAME: 10
+  SHORT_CHAIN_NAME: 11
 };
 
 // Prepare the "Chain" Places
