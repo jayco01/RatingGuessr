@@ -169,6 +169,7 @@ export default function GamePage() {
       console.error("Not enough places found!");
       setGameState("LOBBY");
       setCurrentCity(null);
+      alert("Not enough places found in " + cityData.name);
     }
   };
 

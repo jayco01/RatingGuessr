@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Styles: Improved responsive for mobile view">
-      <change afterPath="$PROJECT_DIR$/public/RatingGuessr_favicon.png" afterDir="false" />
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added Favicon">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,23 +139,7 @@
       <workItem from="1765133498194" duration="6399000" />
       <workItem from="1765245494663" duration="49000" />
       <workItem from="1765300036181" duration="3186000" />
-      <workItem from="1765310971917" duration="12443000" />
-    </task>
-    <task id="LOCAL-00003" summary="Feat: Display panorama in the game page">
-      <option name="closed" value="true" />
-      <created>1763951834308</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1763951834308</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Feat: Deleted Route.js and StreetView.js. Pivot the project to use Places Photos instead of StreetView">
-      <option name="closed" value="true" />
-      <created>1763954891993</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1763954891993</updated>
+      <workItem from="1765310971917" duration="12963000" />
     </task>
     <task id="LOCAL-00005" summary="Feat: Added PlacePhoto.js">
       <option name="closed" value="true" />
@@ -534,14 +517,29 @@
       <option name="project" value="LOCAL" />
       <updated>1765394615873</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Feat: Added Favicon">
+      <option name="closed" value="true" />
+      <created>1765399671159</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1765399671160</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Feat: Added Favicon">
+      <option name="closed" value="true" />
+      <created>1765399753443</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1765399753443</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Style: Added Styling to CityPicker.js" />
     <MESSAGE value="Feat: Implemented CityPicker in the game page" />
     <MESSAGE value="Feat: Implemented a function to change the chosen city" />
     <MESSAGE value="Refactor: Removed repeated code in gamepage" />
@@ -566,6 +564,7 @@
     <MESSAGE value="Docs: Added a readme file" />
     <MESSAGE value="Fix: Increased chain short name to find more partial matches" />
     <MESSAGE value="Styles: Improved responsive for mobile view" />
-    <option name="LAST_COMMIT_MESSAGE" value="Styles: Improved responsive for mobile view" />
+    <MESSAGE value="Feat: Added Favicon" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added Favicon" />
   </component>
 </project>
