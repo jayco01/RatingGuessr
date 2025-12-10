@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Feat: Added a json file that contains a list of restaurant chains">
+    <list default="true" id="268d08de-c275-4c92-95de-03c3bb6c12b9" name="Changes" comment="Refactor: Remove client side debug logging">
+      <change afterPath="$PROJECT_DIR$/public/ratinggussr-screenshot.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/page.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/lib/excludeChains.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/lib/excludeChains.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,29 +51,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.http-requests-log | #8.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.rest-api_1 | #1.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2025.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.http-requests-log | #8.executor": "Run",
+    "HTTP Request.rest-api_1 | #1.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "last_opened_file_path": "C:/CPRG_306/rating-guessr/public",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.Next.js: server-side.executor": "Run",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\CPRG_306\rating-guessr\public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\CPRG_306\rating-guessr\app\components\game" />
       <recent name="C:\CPRG_306\rating-guessr\app\lib" />
@@ -134,7 +140,7 @@
       <workItem from="1765133498194" duration="6399000" />
       <workItem from="1765245494663" duration="49000" />
       <workItem from="1765300036181" duration="3186000" />
-      <workItem from="1765310971917" duration="6926000" />
+      <workItem from="1765310971917" duration="8143000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: Switch to native fetch for Google Places">
       <option name="closed" value="true" />
@@ -512,14 +518,21 @@
       <option name="project" value="LOCAL" />
       <updated>1765315691390</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Refactor: Remove client side debug logging">
+      <option name="closed" value="true" />
+      <created>1765392230334</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1765392230334</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fix: Add a condition to only load firebase analytics when opened in a browser" />
     <MESSAGE value="Feat: Implemented game page UI" />
     <MESSAGE value="Refactor: Extracted Game State UI to separate Functions" />
     <MESSAGE value="Feat: Add component to choose a city" />
@@ -544,6 +557,7 @@
     <MESSAGE value="Feat: Add handleDelete function in favorites" />
     <MESSAGE value="Feat: Implemented favorites page" />
     <MESSAGE value="Feat: Added a json file that contains a list of restaurant chains" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: Added a json file that contains a list of restaurant chains" />
+    <MESSAGE value="Refactor: Remove client side debug logging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor: Remove client side debug logging" />
   </component>
 </project>
