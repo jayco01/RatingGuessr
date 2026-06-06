@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/app/lib/firebase";
+import { supabase } from "@/app/lib/supabase";
 import { useAuth } from "@/app/hooks/useAuth";
 import { FaArrowLeft, FaMapMarkerAlt, FaStar, FaTrash, FaExternalLinkAlt } from "react-icons/fa";
 import { toast, Toaster } from "react-hot-toast";
@@ -11,44 +10,53 @@ import { toast, Toaster } from "react-hot-toast";
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {user, loading: authLoading} = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push("/");//Send back to the game if user is not logged in
+      router.push("/");
     }
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if(!user) return;
-    const q = query(
-      collection(db, "users", user.uid, "favorites"),
-      orderBy("savedAt", "desc")
-    );
+    if (!user) return;
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const favs = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setFavorites(favs);
+    const fetchFavorites = async () => {
+      const { data, error } = await supabase
+        .from("favorites")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("saved_at", { ascending: false });
+
+      if (error) {
+        toast.error("Could not load favorites.");
+      } else {
+        setFavorites(data ?? []);
+      }
       setLoading(false);
-    });
-    return () => unsubscribe();
+    };
 
+    fetchFavorites();
   }, [user]);
 
   const handleDelete = async (placeId) => {
-    if(!confirm("Remove this place from favorites?")) return;
+    if (!confirm("Remove this place from favorites?")) return;
 
-    try {
-      await deleteDoc(doc(db, "users", user.uid, "favorites", placeId));
+    const { error } = await supabase
+      .from("favorites")
+      .delete()
+      .eq("place_id", placeId)
+      .eq("user_id", user.id);
+
+    if (error) {
+      toast.error("Could not delete item.");
+    } else {
+      setFavorites(prev => prev.filter(f => f.place_id !== placeId));
       toast.success("Removed from favorites.");
-    } catch (error) {
-      toast.error("Could not delete item");
     }
   };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-evergreen flex items-center justify-center text-lime_cream">
@@ -82,13 +90,13 @@ export default function FavoritesPage() {
         )}
 
         {favorites.map((place) => (
-          <div key={place.id} className="bg-white rounded-xl overflow-hidden shadow-xl flex flex-col group">
+          <div key={place.place_id} className="bg-white rounded-xl overflow-hidden shadow-xl flex flex-col group">
 
             {/* Image Banner */}
             <div className="h-48 bg-gray-200 relative overflow-hidden">
-              {place.photoName ? (
+              {place.photo_name ? (
                 <img
-                  src={`https://places.googleapis.com/v1/${place.photoName}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.NEXT_PUBLIC_MAPS_API_KEY}`}
+                  src={`https://places.googleapis.com/v1/${place.photo_name}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.NEXT_PUBLIC_MAPS_API_KEY}`}
                   alt={place.name}
                   className="w-full h-full object-cover transition transform group-hover:scale-105 duration-500"
                 />
@@ -116,7 +124,7 @@ export default function FavoritesPage() {
               {/* Actions Footer */}
               <div className="flex gap-3 mt-auto pt-4 border-t border-gray-100">
                 <a
-                  href={place.googleMapsUri}
+                  href={place.google_maps_uri}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 bg-hunter_green hover:bg-evergreen text-white py-2 rounded-lg text-center text-sm font-semibold flex items-center justify-center gap-2 transition"
@@ -124,7 +132,7 @@ export default function FavoritesPage() {
                   <FaExternalLinkAlt size={12} /> Open Maps
                 </a>
                 <button
-                  onClick={() => handleDelete(place.id)}
+                  onClick={() => handleDelete(place.place_id)}
                   className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
                   title="Remove"
                 >
@@ -137,5 +145,4 @@ export default function FavoritesPage() {
       </div>
     </div>
   );
-
 }

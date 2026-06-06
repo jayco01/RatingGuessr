@@ -1,11 +1,9 @@
 "use client"
 
-import {useState, useEffect, useCallback} from "react";
-import { getAuth, signOut } from "firebase/auth";
-import { app, db } from "@/app/lib/firebase";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { supabase } from "@/app/lib/supabase";
 import { useAuth } from "@/app/hooks/useAuth";
 import LoginModal from "@/app/components/LoginModal";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { Toaster, toast } from "react-hot-toast";
 
 
@@ -28,6 +26,7 @@ const loadState = (key, fallback) => {
 export default function GamePage() {
   const BUFFER_UNDERRUN_SIZE = 2;
   const FETCH_TIMEOUT_MS = 5000; // how long should fetch batch take before allowing duplicate places to be added in queue
+  const isGuessing = useRef(false);
   const [isMounted, setIsMounted] = useState(false);
   const [currentCity, setCurrentCity] = useState(() => loadState("rg_city", null));
 
@@ -194,7 +193,8 @@ export default function GamePage() {
 
 
   const handleGuess = (guess) => {
-    if (gameState !== "PLAYING") return;
+    if (gameState !== "PLAYING" || isGuessing.current) return;
+    isGuessing.current = true;
 
     const leftRating = leftPlace.rating;
     const rightRating = rightPlace.rating;
@@ -212,36 +212,40 @@ export default function GamePage() {
   };
 
   const handleNextRound = async () => {
-    setGameState("PLAYING");
-    setLeftPlace(rightPlace);
+    isGuessing.current = false;
 
-    if(placeQueue.length > 0) {
-      const next = placeQueue[0];
-      setRightPlace(next);
+    const nextPlace = placeQueue[0];
 
-      setPlaceQueue(prev => prev.slice(1)); // Shift queue
-      // Background fetch to keep queue full
-      if(placeQueue.length < BUFFER_UNDERRUN_SIZE) {
+    // Skip any place that would create an unguessable round
+    const effectiveNext = (() => {
+      if (!nextPlace) return null;
+      const newLeft = rightPlace;
+      if (newLeft && Math.abs(nextPlace.rating - newLeft.rating) < 0.1) {
+        return placeQueue[1] ?? null;
+      }
+      return nextPlace;
+    })();
 
+    if (effectiveNext) {
+      const skipped = effectiveNext === placeQueue[1] ? 1 : 0;
+      setGameState("PLAYING");
+      setLeftPlace(rightPlace);
+      setRightPlace(effectiveNext);
+      setPlaceQueue(prev => prev.slice(1 + skipped));
+
+      if (placeQueue.length - skipped < BUFFER_UNDERRUN_SIZE) {
         const newBatch = await fetchBatch();
         setPlaceQueue(prevQueue => {
-          // If queue is empty, just take the new batch
           if (prevQueue.length === 0) return newBatch;
 
-          const lastItem = prevQueue[prevQueue.length - 1]; //last item in the current queue
+          const lastItem = prevQueue[prevQueue.length - 1];
+          const firstNew = newBatch[0];
 
-          const firstNew = newBatch[0]; //First item of new data
-          // Tie-Breaker Check
-          if (lastItem && firstNew && lastItem.rating === firstNew.rating) {
-            console.log("Batch boundary tie detected! Dropping duplicate rating to preserve game flow.");
-            // Return existing queue + new batch (minus the first item)
+          if (lastItem && firstNew && Math.abs(lastItem.rating - firstNew.rating) < 0.1) {
             return [...prevQueue, ...newBatch.slice(1)];
-
           }
-          // merge after checking the tie
           return [...prevQueue, ...newBatch];
         });
-
       }
     } else {
       setGameState("LOADING");
@@ -259,22 +263,21 @@ export default function GamePage() {
     const toastId = toast.loading("Saving location...");
 
     try {
-      // Fetch Rich Details from Server Proxy
       const response = await fetch(`/api/place/details?placeId=${leftPlace.placeId}`);
       const details = await response.json();
 
-      const favoriteData = {
-        placeId: leftPlace.placeId,
+      const { error } = await supabase.from("favorites").upsert({
+        user_id: user.id,
+        place_id: leftPlace.placeId,
         name: leftPlace.name,
         rating: leftPlace.rating,
-        photoName: leftPlace.photos?.[0]?.name || null, // save one photo for the dashboard
+        photo_name: leftPlace.photos?.[0]?.name ?? null,
         address: details.formattedAddress || "Address not available",
-        googleMapsUri: details.googleMapsUri || null,
+        google_maps_uri: details.googleMapsUri ?? null,
         city: currentCity.name,
-        savedAt: serverTimestamp()
-      };
+      });
 
-      await setDoc(doc(db, "users", user.uid, "favorites", leftPlace.placeId), favoriteData);
+      if (error) throw error;
 
       toast.success("Saved to favorites!", { id: toastId });
 
@@ -284,13 +287,13 @@ export default function GamePage() {
     }
   };
 
-  const handleLogout = () => {
-    const auth = getAuth(app);
-    signOut(auth);
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
 
   const resetGame = () => {
+    isGuessing.current = false;
     localStorage.removeItem("rg_score");
     localStorage.removeItem("rg_left");
     localStorage.removeItem("rg_right");

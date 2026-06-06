@@ -38,8 +38,8 @@ export default function GameHeader({ currentCity, user, onClearCity, onLogout, o
             >
               <div className="w-6 h-6 rounded-full bg-hunter_green flex items-center justify-center text-xs overflow-hidden">
                 {/* Fallback avatar logic */}
-                {user.photoURL ? (
-                  <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                {user.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} alt="User" className="w-full h-full object-cover" />
                 ) : (
                   user.email?.[0]?.toUpperCase()
                 )}

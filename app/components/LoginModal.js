@@ -1,45 +1,43 @@
 "use client";
 
-import {useState} from "react";
-import {getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
-import {app} from "@/app/lib/firebase";
-import {FaGoogle, FaTimes} from "react-icons/fa";
+import { useState } from "react";
+import { supabase } from "@/app/lib/supabase";
+import { FaGoogle, FaTimes } from "react-icons/fa";
 
-export default function LoginModal({isOpen, onClose}) {
+export default function LoginModal({ isOpen, onClose }) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
-  if(!isOpen) return null;
+  if (!isOpen) return null;
 
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  const handleGoogleLogin = async() => {
+  const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin },
+      });
+      if (error) throw error;
       onClose();
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const handleEmailAuth = async event => {
+  const handleEmailAuth = async (event) => {
     event.preventDefault();
     setError("");
 
     try {
-      if (isSignUp) {
-        // Create a new account
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        // login to an existing account
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-      onClose();// close login model once done logging in
-    } catch (error) {
-      setError(error.message.replace("Firebase: ", ""));
+      const { error } = isSignUp
+        ? await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) throw error;
+      onClose();
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -127,7 +125,7 @@ export default function LoginModal({isOpen, onClose}) {
             <button
               onClick={() => {
                 setIsSignUp(!isSignUp);
-                setError(""); // Clear errors when switching modes
+                setError("");
               }}
               className="ml-1 text-green-700 font-bold hover:underline"
             >
@@ -137,6 +135,5 @@ export default function LoginModal({isOpen, onClose}) {
         </div>
       </div>
     </div>
-  )
-
+  );
 }
