@@ -180,6 +180,8 @@ export default function GamePage() {
         return;
       }
 
+      // Only auto-fetch on mount when there's a saved city but no saved places.
+      // New city selections are handled entirely by handleCitySelect.
       const batch = await fetchBatch();
       if (batch.length >= 2) {
         setLeftPlace(batch[0]);
@@ -189,7 +191,8 @@ export default function GamePage() {
       }
     };
     initGame();
-  }, [fetchBatch, currentCity])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // run only on mount — handleCitySelect owns all subsequent fetches
 
 
   const handleGuess = (guess) => {
