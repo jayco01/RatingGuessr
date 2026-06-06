@@ -114,7 +114,7 @@ export async function POST(request) {
           name: place.displayName.text,
           rating: place.rating,
           userRatingCount: place.userRatingCount,
-          photos: place.photos.slice(0, 10).map(p => ({ name: p.name, attributions: p.authorAttributions }))
+          photos: (place.photos || []).slice(0, 10).map(p => ({ name: p.name, attributions: p.authorAttributions }))
         });
       });
 
@@ -259,7 +259,6 @@ function isPlaceEligible(place, currentPool, historyOfSeenIds) {
     return false;
   }
 
-  if (!hasPhotos) return false;
   if (isAlreadyInPool) return false;
   if (isInHistory) return false;
   if (reviewCount < CONFIG.REVIEWS.MIN || reviewCount > CONFIG.REVIEWS.MAX) return false;
